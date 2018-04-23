@@ -1,0 +1,68 @@
+627. Longest Palindrome (Leetcode 409)
+
+Given a string which consists of lowercase or uppercase letters, find the length of the longest palindromes 
+that can be built with those letters.
+
+This is case sensitive, for example "Aa" is not considered a palindrome here.
+
+Note:
+Assume the length of given string will not exceed 1,010.
+
+Example:
+
+Input:
+"abccccdd"
+
+Output:
+7
+
+Explanation:
+One longest palindrome that can be built is "dccaccd", whose length is 7.
+
+
+思路一：
+class Solution:
+    """
+    @param s: a string which consists of lowercase or uppercase letters
+    @return: the length of the longest palindromes that can be built
+    """
+    def longestPalindrome(self, s):
+        # count each letter with dictionary
+        if s == None:
+            return 0
+            
+        dict = {}
+        count = 0
+        odd = 0
+        
+        for le in s:
+            if le not in dict:
+                dict[le] = 1
+            else:
+                dict[le] += 1
+        
+        for key in dict:
+            if dict[key] % 2 == 0:
+                count += dict[key]      # 所有偶数个的字母都计入
+            else:
+                count += dict[key] - 1  # 奇数个的字母：减1变成偶数个计入
+                odd = 1                 # 可以允许有一个奇数个的字母存在，故加1
+        
+        return count + odd
+
+
+思路二：用现成的字典
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        ans = odd = 0
+        cnt = collections.Counter(s)
+        for c in cnt:
+            ans += cnt[c]
+            if cnt[c] % 2 == 1:
+                ans -= 1
+                odd += 1
+        return ans + (odd > 0)
