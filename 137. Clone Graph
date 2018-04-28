@@ -1,0 +1,62 @@
+137. Clone Graph
+
+deep copy
+
+1 复制所有的点
+2 把old node作为key，new node作为value
+3 再连边
+
+
+改写自别人的code
+"""
+Definition for a undirected graph node
+class UndirectedGraphNode:
+    def __init__(self, x):
+        self.label = x
+        self.neighbors = []
+"""
+
+from collections import deque
+class Solution:
+    """
+    @param: node: A undirected graph node
+    @return: A undirected graph node
+    """
+    def cloneGraph(self, node):
+        # write your code here
+        if not node:
+            return node
+        
+        root = node
+        
+        # use bfs algorithm to traverse the graph and get all nodes.
+        nodes = self.getNodes(node)
+        
+        # copy nodes, store the old->new mapping information in a hash map
+        mapping = {}
+        for node in nodes:
+            mapping[node] = UndirectedGraphNode(node.label)
+        
+        # copy neighbors(edges)
+        for node in nodes:
+            new_node = mapping[node]
+            for neighbor in node.neighbors:
+                new_neighbor = mapping[neighbor]
+                new_node.neighbors.append(new_neighbor)  # self.neighbors = [] is a list, therefore can use append
+        
+        return mapping[root]
+                
+        
+    
+    def getNodes(self, node):
+        queue = deque([node])
+        result = set([node])  # can use set, because Nodes are labeled uniquely.
+        while queue:
+            head = queue.popleft()
+            for neighbor in head.neighbors:
+                if neighbor not in result:
+                    result.add(neighbor)
+                    queue.append(neighbor)
+        return result
+        
+        
