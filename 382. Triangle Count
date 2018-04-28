@@ -1,0 +1,28 @@
+382. Triangle Count 
+
+注意：库函数（.sort()）这种，空间复杂度都是O（1） 具体见视频及随课
+
+class Solution:
+    """
+    @param S: A list of integers
+    @return: An integer
+    """
+    def triangleCount(self, S):
+        # write your code here
+        if len(S) < 3:
+            return 0
+        
+        S.sort()
+        count = 0
+        
+        for i in range(2, len(S)):
+            left = 0
+            right = i - 1
+            while left < right:
+                if S[left] + S[right] > S[i]:
+                    count += right - left
+                    right -= 1
+                else:
+                    left += 1
+        
+        return count
