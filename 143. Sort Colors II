@@ -1,0 +1,41 @@
+143. Sort Colors II  （太经典了必须会！）
+
+当color更多时：彩虹排序
+
+时间复杂度：O(nlogk)
+
+
+class Solution:
+    """
+    @param colors: A list of integer
+    @param k: An integer
+    @return: nothing
+    """
+    def sortColors2(self, colors, k):
+        # write your code here
+        if not colors:
+            return
+        return self.rainbowSort(colors, 0, len(colors) - 1, 1, k)
+    
+    def rainbowSort(self, colors, start, end, colorFrom, colorTo):
+        if colorFrom >= colorTo:
+            return
+        if start >= end:
+            return
+        colorMid = (colorFrom + colorTo) / 2
+        
+        left = start
+        right = end
+        
+        while left <= right:
+            while left <= right and colors[left] <= colorMid:   # 注意这里和快排的模板不同，这里用<=而不只是<, 
+                left += 1                                       # 为了保证left -> r 包含全部的colorMid，要把所有midColor全部放在左边
+            while left <= right and colors[right] > colorMid:
+                right -= 1
+            if left <= right:
+                colors[left], colors[right] = colors[right], colors[left]
+                left += 1
+                right -= 1
+        
+        self.rainbowSort(colors, start, right, colorFrom, colorMid)
+        self.rainbowSort(colors, left, end, colorMid + 1, colorTo)
