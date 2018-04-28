@@ -1,0 +1,53 @@
+56. Two Sum
+
+hashtable 的做法：
+
+class Solution:
+    """
+    @param numbers: An array of Integer
+    @param target: target = numbers[index1] + numbers[index2]
+    @return: [index1 + 1, index2 + 1] (index1 < index2)
+    """
+    def twoSum(self, numbers, target):
+        # hash table
+        dic = {}
+        for i in range(len(numbers)):
+            expect = target - numbers[i]
+            if expect in dic:
+                return dic[expect], i
+            dic[numbers[i]] = i
+            
+            
+
+two pointers 做法：
+
+class Solution:
+    """
+    @param numbers: An array of Integer
+    @param target: target = numbers[index1] + numbers[index2]
+    @return: [index1 + 1, index2 + 1] (index1 < index2)
+    """
+    def twoSum(self, numbers, target):
+        # two pointers
+        # 先排序
+        new = sorted(numbers)
+        index = []
+        
+        l, r = 0, len(numbers) - 1
+        while l < r:
+            if new[l] + new[r] == target:
+                for k in range(0,len(numbers)):
+                    if numbers[k] == new[l]:
+                        index.append(k)
+                        break
+                for k in range(len(numbers)-1,-1,-1):
+                    if numbers[k] == new[r]:
+                        index.append(k)
+                        break
+                index.sort()
+                break
+            if new[l] + new[r] < target:
+                l += 1
+            if new[l] + new[r] > target:
+                r -= 1
+        return index
