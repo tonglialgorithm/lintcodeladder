@@ -1,6 +1,8 @@
-3. 两数之差问题
+两数之差问题
 
 两数之和的follow up问题
+610. Two Sum - Difference equals to target 
+
 
 class Solution:
     """
