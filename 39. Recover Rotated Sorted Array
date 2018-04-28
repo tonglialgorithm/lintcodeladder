@@ -1,0 +1,29 @@
+39. Recover Rotated Sorted Array
+
+数组的位置移动 O(1)的空间，O(N)的时间： reverse是可以的
+
+三步：
+1. 反转前一段
+2. 反转后一段
+3. 反转整体
+
+class Solution:
+    """
+    @param nums: An integer array
+    @return: nothing
+    """
+    def reverse(self, A, start, end):
+        while start < end:
+            A[start], A[end] = A[end], A[start]
+            start += 1
+            end -= 1
+        return
+            
+    def recoverRotatedSortedArray(self, nums):
+        # write your code here
+        for i in range(len(nums) - 1):   # 注意是从0到len - 2， 不然i+1会溢出
+            if nums[i] > nums[i + 1]:
+                self.reverse(nums, 0, i)
+                self.reverse(nums, i + 1, len(nums) - 1)
+                self.reverse(nums, 0, len(nums) - 1)
+                return
