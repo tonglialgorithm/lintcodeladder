@@ -1,0 +1,32 @@
+59. 3Sum Closest 
+
+
+class Solution:
+    """
+    @param numbers: Give an array numbers of n integer
+    @param target: An integer
+    @return: return the sum of the three integers, the sum closest target.
+    """
+    def threeSumClosest(self, numbers, target):
+        # write your code here
+        if len(numbers) < 3:
+            return -1
+        
+        numbers.sort()
+        ans = None
+        n = len(numbers)
+        
+        for i in range(0, n - 2):
+            left = i + 1
+            right = n - 1
+        
+            while left < right:
+                sum = numbers[i] + numbers[left] + numbers[right]
+                if ans is None or abs(sum - target) < abs(ans - target):
+                    ans = sum
+                if sum <= target:
+                    left += 1
+                else:
+                    right -= 1
+        
+        return ans
