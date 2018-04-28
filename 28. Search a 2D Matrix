@@ -1,0 +1,35 @@
+28. Search a 2D Matrix 
+
+
+直白的二分
+class Solution:
+    """
+    @param matrix, a list of lists of integers
+    @param target, an integer
+    @return a boolean, indicate whether matrix contains target
+    """
+    def searchMatrix(self, matrix, target):
+        if len(matrix) == 0:
+            return False
+        
+        n, m = len(matrix), len(matrix[0])
+        start, end = 0, n * m - 1
+        
+        while start + 1 < end:
+            mid = start + (end - start) / 2
+            row = mid / m
+            col = mid % m
+            if matrix[row][col] < target:
+                start = mid
+            else:
+                end = mid
+        
+        row, col = start / m, start % m
+        if matrix[row][col] == target:
+            return True
+        
+        row, col = end / m, end % m
+        if matrix[row][col] == target:
+            return True
+        
+        return False
