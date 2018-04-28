@@ -1,0 +1,64 @@
+随课： 归并排序算法 Merge Sort
+
+归并排序和快排相比的劣势：花费O(n)的额外空间（合并两个数组的时候不能在原地进行）
+
+**区间的分治     之前一直理解不了
+
+现在的理解：如下面程序，
+1. 先分（mergeSort）: 中间切一刀，一直对半分下去，直到分成一个一个的；
+2. 再合（merge）：对于每一对左半和右半，比较具体数字的大小，并入temp
+3. （其实是在merge的最后一步）将temp倒入原数组A
+
+463. Sort Integers 
+
+改写了视频中java的程序。有一点不自然：create temp的时候没用[], 用的是类似java的办法，用None占位，使temp和
+原数组一样长
+
+class Solution:
+    """
+    @param A: an integer array
+    @return: nothing
+    """
+    def sortIntegers(self, A):
+        # write your code here
+        if not A:
+            return
+        
+        temp = [None] * len(A)
+        self.mergeSort(A, 0, len(A) - 1, temp)
+    
+    def mergeSort(self, A, start, end, temp):
+        if start >= end:
+            return 
+        
+        self.mergeSort(A, start, (start + end) / 2, temp)
+        self.mergeSort(A, (start + end) / 2 + 1, end, temp)
+        self.merge(A, start, end, temp)
+    
+    def merge(self, A, start, end, temp):
+        mid = (start + end) / 2
+        leftInd = start
+        rightInd = mid + 1
+        index = leftInd  # temp数组的index
+        
+        while leftInd <= mid and rightInd <= end:
+            if A[leftInd] < A[rightInd]:
+                temp[index] = A[leftInd]
+                leftInd += 1
+                index += 1
+            else:
+                temp[index] = A[rightInd]
+                rightInd += 1
+                index += 1
+        
+        while leftInd <= mid:   # 如果发现左边数组有剩而右边已经都放完了
+            temp[index] = A[leftInd]
+            leftInd += 1
+            index += 1
+        while rightInd <= end: # 如果发现右边数组有剩而左边已经都放完了
+            temp[index] = A[rightInd]
+            rightInd += 1
+            index += 1
+        
+        for i in range(start, end + 1):
+            A[i] = temp[i]
