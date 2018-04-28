@@ -1,0 +1,43 @@
+140. Fast Power 
+
+mod的特性： a * b % c = (a % c) * (b % c) % c
+加减法也一样
+
+
+第一种：递归算法
+n = 2 * （n/2）, 一直对半分，直到为0或者1
+
+class Solution:
+    """
+    @param a: A 32bit integer
+    @param b: A 32bit integer
+    @param n: A 32bit integer
+    @return: An integer
+    """
+    def fastPower(self, a, b, n):
+        # 递归算法
+        if n == 1:
+            return a % b
+        if n == 0:
+            return 1 % b
+        
+        product = self.fastPower(a, b, n/2)
+        product = (product * product) % b
+        if n % 2 == 1:
+            product = (product * a) % b
+        
+        return product
+
+
+第二种：非递归（用二进制想，不是特别懂）
+
+    def fastPower(self, a, b, n):
+        # 非递归算法
+        ans = 1
+        while n > 0:
+            if n % 2 == 1:
+                ans = ans * a % b
+            a = a * a % b
+            n = n / 2
+        
+        return ans % b
