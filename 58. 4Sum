@@ -1,0 +1,62 @@
+58. 4Sum
+
+当KSum的K 大于等于4 之后， 稍有不同：
+4Sum： 如果循环两个数，之后two pointers的话，时间复杂度O(n^3) (无论最好最坏情况)
+
+另一种方法：折半搜索
+任意两数之和放入hashtable，所以hashtable的key是两数之和，value是list of index pairs
+再for a ...:
+      for b ...:
+即for循环剩下的两个数，target - a - b是否和hashtable里的两数之和相等        
+
+时间复杂度：最坏情况下是O(n^3), 最好情况下（任意两数之和都不一样）则为O（n^2)
+
+class Solution:
+    """
+    @param numbers: Give an array
+    @param target: An integer
+    @return: Find all unique quadruplets in the array which gives the sum of zero
+    """
+    def createTwosumMap(self, numbers):
+        map = {} 
+        for i in range(len(numbers) - 1):
+            for j in range(i + 1, len(numbers)):
+                twosum = numbers[i] + numbers[j]
+                if twosum in map:
+                    map[twosum].append((i, j))
+                else:
+                    map[twosum] = [(i, j)]
+        return map # 需要return map
+        
+        
+    def fourSum(self, numbers, target):
+        # write your code here
+        if len(numbers) < 4:
+            return []
+        
+        numbers.sort()
+        res = []
+        
+        map = self.createTwosumMap(numbers)
+        
+        for i in range(len(numbers) - 1):
+            if i != 0 and numbers[i - 1] == numbers[i]:   # hashmap之外去重的方式
+                continue 
+            for j in range(i + 1, len(numbers)):
+                if j != i + 1 and numbers[j - 1] == numbers[j]:  # hashmap之外去重的方式
+                    continue
+                remainTwosum = target - numbers[i] - numbers[j]
+                if remainTwosum in map:
+                    previousthird = sys.maxint    # hashmap之内去重的方式
+                    previousfourth = sys.maxint
+                    for pair in map[remainTwosum]:
+                        thirdInd = pair[0]
+                        fourthInd = pair[1]
+                        if thirdInd > j and fourthInd > j and \
+                        previousthird != numbers[thirdInd] and \
+                        previousfourth!= numbers[fourthInd]:
+                            res.append((numbers[i], numbers[j], \
+                            numbers[thirdInd], numbers[fourthInd]))
+                            previousthird = numbers[thirdInd]
+                            previousfourth = numbers[fourthInd]
+        return res
