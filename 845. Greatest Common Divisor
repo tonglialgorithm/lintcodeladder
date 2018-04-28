@@ -1,0 +1,20 @@
+845. Greatest Common Divisor 
+
+辗转相除法， 又名欧几里德算法， 是求最大公约数的一种方法。它的具体做法是：用较大的数除以较小的数，再用除数除以出现的
+余数（第一余数），再用第一余数除以出现的余数（第二余数），如此反复，直到最后余数是0为止。如果是求两个数的最大公约数，那么
+最后的除数就是这两个数的最大公约数。
+
+class Solution:
+    """
+    @param a: the given number
+    @param b: another number
+    @return: the greatest common divisor of two numbers
+    """
+    def gcd(self, a, b):
+        big = max(a, b)
+        small = min(a, b)
+        
+        if small != 0:
+            return self.gcd(small, big % small)
+        else:
+            return big
