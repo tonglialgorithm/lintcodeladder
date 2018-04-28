@@ -1,0 +1,21 @@
+链表中点问题
+
+228. Middle of Linked List
+
+快慢指针：注意初始条件，fast要在slow前一个，不然只有两个元素的条件过不去
+class Solution:
+    """
+    @param: head: the head of linked list.
+    @return: a middle node of the linked list
+    """
+    def middleNode(self, head):
+        # write your code here
+        if not head:
+            return None
+            
+        slow = head
+        fast = head.next
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
