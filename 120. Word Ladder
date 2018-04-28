@@ -1,0 +1,60 @@
+120. Word Ladder 
+
+隐式图，简单图 - bfs
+分层遍历
+
+每次往queue里面加东西，一定要在hash里面标记
+
+
+class Solution:
+    """
+    @param: start: a string
+    @param: end: a string
+    @param: dict: a set of string
+    @return: An integer
+    """
+    def ladderLength(self, start, end, dict):
+        # write your code here
+        if not dict:
+            return 0
+        if start == end:
+            return 1
+        
+        # add start and end in the dict
+        dict.add(start)   # dict is a set, so can use add
+        dict.add(end)
+        
+        # initialize queue, hash, length; hash用来记录路径
+        queue = collections.deque([start])
+        hash = {start: True}    # put into queue and hash at the same time
+        length = 1
+        
+        while queue:
+            length += 1
+            size = len(queue)
+            for i in range(size):
+                word = queue.popleft()
+                for nextword in self.getNextWords(word, dict): # 在所有可能的nextword（一个字母与word不同的word）里
+                    if nextword in hash:
+                        continue           # 如果已经找过这个词了（防止回退）
+                    if nextword == end:
+                        return length
+                    
+                    hash[nextword] = True
+                    queue.append(nextword)
+    
+    def getNextWords(self, word, dict):  # 找到所有可能的nextword（一个字母与word不同的，且在给定dict中的词）并存在nextWords里
+        nextWord = ''
+        nextWords = []
+        wordlen = len(word)
+        for letter in 'abcdefghijklmnopqrstuvwxyz':
+            for i in xrange(wordlen):
+                if letter != word[i]:
+                    nextWord = self.replace(word, i, letter)
+                if nextWord in dict:
+                    nextWords.append(nextWord)
+        return nextWords       # 所以nextWords里存的，其实是在给定dict中，所有与该word相差一个字母的词
+        
+    def replace(self, string, index, character):
+        return string[:index] + character + string[index+1:]
+
