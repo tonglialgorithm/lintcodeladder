@@ -1,0 +1,25 @@
+380. Intersection of Two Linked Lists
+
+先分别从两个链表的头向后走，如果不能相遇，则先到底的那个接上另一条，形成环
+class Solution:
+    """
+    @param: headA: the first list
+    @param: headB: the second list
+    @return: a ListNode
+    """
+    def getIntersectionNode(self, headA, headB):
+        # write your code here
+        if not headA or not headB:
+            return None
+        
+        p, q = headA, headB        
+        while p and q and p != q:
+            p = p.next
+            q = q.next
+            if p == q:
+                return p
+            if p is None:
+                p = headB
+            if q is None:
+                q = headA
+        return p  # if no intersect, both will arrive at None so return p is to return None
