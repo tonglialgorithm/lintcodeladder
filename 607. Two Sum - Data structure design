@@ -1,0 +1,33 @@
+607. Two Sum - Data structure design
+
+hashtable 的add：时间复杂度O（1），find：时间复杂度O（n）
+双指针：见视频，最后发现没有hashtable好
+
+
+class TwoSum:
+    """
+    @param: number: An integer
+    @return: nothing
+    """
+    def __init__(self):   #需要先定义dictionary的数据结构
+        self.count = {}
+        
+    def add(self, number):
+        # Write your code here
+        if number in self.count:
+            self.count[number] += 1
+        else:
+            self.count[number] = 1
+        
+
+    """
+    @param: value: An integer
+    @return: Find if there exists any pair of numbers which sum is equal to the value.
+    """
+    def find(self, value):
+        # Write your code here
+        for num in self.count:
+            expect = value - num
+            if expect in self.count and (expect != num or self.count[num] > 1):
+                return True
+        return False
