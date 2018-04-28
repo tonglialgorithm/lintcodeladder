@@ -1,0 +1,34 @@
+891. Valid Palindrome II
+
+上一题的follow up
+
+class Solution:
+    """
+    @param s: a string
+    @return: nothing
+    """
+    def subPalindrome(self, s, left, right):
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            left += 1
+            right -= 1
+        return True
+        
+    
+    def validPalindrome(self, s):
+        # Write your code here
+        if len(s) <= 2:
+            return True
+        left, right = 0, len(s) - 1
+        
+        while left < right:
+            if s[left] != s[right]:
+                break
+            left += 1
+            right -= 1
+        
+        if left == right:
+            return True
+        
+        return self.subPalindrome(s, left + 1, right) or self.subPalindrome(s, left, right - 1)
