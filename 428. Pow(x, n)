@@ -1,0 +1,42 @@
+428. Pow(x, n)
+
+和前一题差不多，只是需要先处理一下n为负数的情况
+class Solution:
+    """
+    @param: x: the base number
+    @param: n: the power number
+    @return: the result
+    """
+    def myPow(self, x, n):
+        if n < 0:
+            x = 1/x
+            n = -n
+        
+        ans = 1
+        tmp = x
+        
+        while n > 0:
+            if n % 2 == 1:
+                ans = ans * tmp
+            tmp = tmp * tmp
+            n = n / 2
+        
+        return ans
+
+
+递归解法：
+    def myPow(self, x, n):
+        if n < 0:
+            x = 1/x
+            n = -n
+        if n == 1:
+            return x
+        if n == 0:
+            return 1
+            
+        product = self.myPow(x, n/2)
+        product = product * product
+        if n % 2 == 1:
+            product = x * product
+        
+        return product
