@@ -1,0 +1,54 @@
+课上题：同向双指针
+
+539. Move Zeroes 
+
+维持相对顺序：同向双指针
+（不用维持：相向双指针）
+
+class Solution:
+    """
+    @param nums: an integer array
+    @return: nothing
+    """
+    def moveZeroes(self, nums):
+        # 同向移动指针
+        if not nums:
+            return []
+            
+        left, right = 0, 0
+        while right < len(nums):
+            if nums[right] != 0:
+                nums[left], nums[right] = nums[right], nums[left]
+                left += 1
+            right += 1
+
+
+
+
+同向移动指针, 且像课上讲的minimize the total number of operations
+
+结合这个solution，好像更加理解了这道题：凡是right指针走过的地方，要么已经处理过了（不为0的值，已经写到前面去了），
+要么是0所以不需要处理，只等擦除重写。所以left指针指向的值，由于都被right检查过，可以放心的被覆盖。
+
+class Solution:
+    """
+    @param nums: an integer array
+    @return: nothing
+    """
+    def moveZeroes(self, nums):        
+        if not nums:
+            return []
+        
+        left, right = 0, 0
+        while right < len(nums):
+            if nums[right] != 0:
+                if right != left:
+                    nums[left] = nums[right]
+                left += 1
+            right += 1
+        
+        for i in range(left, len(nums)):
+            if nums[i] != 0:
+                nums[i] = 0
+        
+        return
