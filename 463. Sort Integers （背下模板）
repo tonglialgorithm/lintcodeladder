@@ -1,0 +1,41 @@
+随课： 快速排序算法 Quick Sort
+
+先整体有序，后局部有序的递归排序
+
+463. Sort Integers （背下模板）
+
+class Solution:
+    """
+    @param A: an integer array
+    @return: nothing
+    """
+    def sortIntegers(self, A):
+        # write your code here
+        if not A:
+            return
+        
+        self.quickSort(A, 0, len(A) - 1)
+    
+    def quickSort(self, A, start, end):
+        if start >= end:
+            return 
+        
+        left = start
+        right = end
+        pivot = A[(start + end) / 2]  #注意：pivot是value，不是index！
+        # 因为start和end的范围不会达到maxlongint，所以在快排中：START + (END - START) / 2 或者 (START + END) / 2 均可。
+        
+        while left <= right:  # 一直都是left <= right 而不只是小于
+            while left <= right and A[left] < pivot:  # 注意在用value和pivot相比时候，都是小于或大于，没有等于
+                left += 1
+            while left <= right and A[right] > pivot:
+                right -= 1
+            if left <= right:
+                A[left], A[right] = A[right], A[left]
+                left += 1
+                right -= 1
+        
+        self.quickSort(A, start, right)
+        self.quickSort(A, left, end)
+        
+        return
