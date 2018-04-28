@@ -1,0 +1,24 @@
+2. 滑动窗口问题 sliding window
+
+604. Window Sum
+
+class Solution:
+    """
+    @param nums: a list of integers.
+    @param k: length of window.
+    @return: the sum of the element inside the window at each moving.
+    """
+    def winSum(self, nums, k):
+        # write your code here
+        n = len(nums)
+        if k <= 0 or k > n or n == 0:
+            return []
+        
+        sum = [0] * (n - k + 1)   # 结果里有多少个值
+        for i in xrange(k):
+            sum[0] += nums[i] # 最初的k个之和
+        
+        for i in xrange(1, n - k + 1):  # 滑动的过程
+            sum[i] = sum[i - 1] - nums[i - 1] + nums[i + k - 1]
+        
+        return sum
