@@ -1,0 +1,36 @@
+3. 两数之差问题
+
+两数之和的follow up问题
+
+class Solution:
+    """
+    @param nums: an array of Integer
+    @param target: an integer
+    @return: [index1 + 1, index2 + 1] (index1 < index2)
+    """
+    def twoSum7(self, nums, target):
+        # write your code here
+        n = len(nums)
+        if n < 2:
+            return []
+        if target < 0:
+            target = -1 * target
+        
+        nums = [(num, i) for i, num in enumerate(nums)]
+        nums.sort()
+        
+        j = 0
+        index = []
+        
+        for i in xrange(n):
+            if i == j:
+                j += 1
+            while j < n and nums[j][0] - nums[i][0] < target:
+                j += 1
+            if j < n and nums[j][0] - nums[i][0] == target:
+                index = [nums[i][1] + 1, nums[j][1] + 1]
+        
+        if index[0] > index[1]:
+            index[0], index[1] = index[1], index[0]
+        
+        return index
