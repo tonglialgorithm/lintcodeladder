@@ -1,0 +1,57 @@
+460. Find K Closest Elements
+
+
+class Solution:
+    """
+    @param A: an integer array
+    @param target: An integer
+    @param k: An integer
+    @return: an integer array
+    """
+    # 思路：先找到在A中比target小一点的数，再从此向两边找（双指针）：
+        # 先看左边，如果左边离的更近，则记录此数，然后左指针左移；
+        # 如果右边离得更近，则记录右数，右指针右移
+    def findlowerclosest(self, A, target):
+        start = 0
+        end = len(A) - 1
+        
+        while start + 1 < end:
+            mid = start + (end - start) / 2
+            if A[mid] < target:
+                start = mid
+            else:
+                end = mid
+        
+        if A[end] < target:  # 假如target比原array中最大的值还要大
+            return end
+        if A[start] < target:
+            return start
+        
+        return -1 # 假如target比原array中最小的值还要小
+    
+    def isleftcloser(self, A, target, left, right):
+        if left < 0:
+            return False
+        if right >= len(A):
+            return True
+        
+        if target - A[left] != A[right] - target:
+            return target - A[left] < A[right] - target
+            
+        return True
+        
+    def kClosestNumbers(self, A, target, k):
+        # write your code here
+        left = self.findlowerclosest(A, target)
+        right = left + 1
+        
+        res = [0] * k
+        for i in range(k):
+            if self.isleftcloser(A, target, left, right):
+                res[i] = A[left]
+                left -= 1
+            else:
+                res[i] = A[right]
+                right += 1
+        
+        return res
