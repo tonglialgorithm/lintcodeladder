@@ -1,0 +1,23 @@
+415. Valid Palindrome
+
+判断回文串
+
+class Solution:
+    """
+    @param s: A string
+    @return: Whether the string is a valid palindrome
+    """
+    def isPalindrome(self, s):
+        # 去掉其他字符，转换成小写
+        new = []
+        
+        for e in s:
+            if e.isalnum():
+                new.append(e.lower())
+        
+        length = len(new)
+        for i in range(0, length/2):
+            if new[i] != new[length-i-1]:
+                return False
+        
+        return True
