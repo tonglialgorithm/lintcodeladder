@@ -1,0 +1,73 @@
+69. Binary Tree Level Order Traversal 
+
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+Challenge 1: Using only 1 queue to implement it.  这个模板要背下来
+
+from collections import deque  # 使用deque
+
+class Solution:
+    """
+    @param root: A Tree
+    @return: Level order a list of lists of integer
+    """
+    def levelOrder(self, root):
+        # write your code here
+        result = []
+        
+        if not root:
+            return []
+        
+        q = deque([root])  # 首先: 用deque把[root]变成一个queue
+        while q:
+            level = []          # 每一层都重新建立一个空list
+            size = len(q)
+            for i in range(size):
+                node = q.popleft()
+                level.append(node.val)
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            result.append(level)
+        
+        return result
+
+--------------------------------------------------------------------------------------------
+Challenge 2: Use DFS algorithm to do it.
+
+用DFS: 迭代法 iteration
+
+能看懂别人的答案如下：
+class Solution:
+    """
+    @param root: A Tree
+    @return: Level order a list of lists of integer
+    """
+    def levelOrder(self, root):
+        # write your code here
+        result = []
+        
+        if not root:
+            return result
+            
+        thislevel = 0
+        self.DFS(root, result, thislevel)
+        return result
+        
+    def DFS(self, root, result, thislevel):
+        if not root:
+            return
+        if thislevel > len(result) - 1:
+            result.append([])
+        result[thislevel].append(root.val)
+        thislevel += 1
+        self.DFS(root.left, result, thislevel)
+        self.DFS(root.right, result, thislevel)
+        return
