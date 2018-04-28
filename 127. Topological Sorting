@@ -1,0 +1,50 @@
+127. Topological Sorting 
+
+参考了别人的解答
+要学习collections里面deque的用法，以及其popleft功能（实现queue的先进先出）
+
+"""
+Definition for a Directed graph node
+class DirectedGraphNode:
+    def __init__(self, x):
+        self.label = x
+        self.neighbors = []
+"""
+
+from collections import deque
+class Solution:
+    """
+    @param: graph: A list of Directed graph node
+    @return: Any topological order for the given graph.
+    """
+    def topSort(self, graph):
+        res = []
+        if not graph:
+            return res
+        
+        # define indegree with dict 用来存储所有节点的入度
+        indegree = {}
+        for top in graph:
+            for point in top.neighbors:
+                if point not in indegree:
+                    indegree[point] = 1
+                else:
+                    indegree[point] += 1
+        
+        # 把所有入度为0的点，放到BFS专用的队列中
+        start_nodes = []
+        for top in graph:
+            if top not in indegree:
+                start_nodes.append(top)
+        
+        # define queue, 每次从队列中拿出一个点放到拓扑序列里，并将该点指向的所有点的入度减1
+        q = deque(start_nodes)
+        while q:
+            node = q.popleft()
+            res.append(node)
+            for point in node.neighbors:
+                indegree[point] -= 1
+                # 减去1之后入度变为0的点，也放入队列
+                if indegree[point] == 0:
+                    q.append(point)
+        return res
