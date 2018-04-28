@@ -1,0 +1,33 @@
+894. Pancake Sorting
+
+
+"""
+class FlipTool:
+
+    @classmethod
+    def flip(cls, arr, i):
+        ...
+"""
+class Solution:
+    """
+    @param array: an integer array
+    @return: nothing
+    """
+    def pancakeSort(self, array):
+        # Write your code here
+        n = len(array)
+        curr_size = n
+        while curr_size > 1:
+            mi = self.findMax(array, curr_size)
+            if mi != curr_size - 1:  # 如果最大值已经在最后的话，这一步就不用翻转了
+                FlipTool.flip(array, mi)  # 翻转从第一个到最大值
+                FlipTool.flip(array, curr_size - 1) # 现在最大值是第一个，翻转全部
+            curr_size -= 1
+    
+    # 寻找最大值的index，记作mi
+    def findMax(self, array, n):
+        mi = 0
+        for i in range(n):
+            if array[i] > array[mi]:
+                mi = i
+        return mi
