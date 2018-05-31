@@ -1,0 +1,58 @@
+376. Binary Tree Path Sum
+
+Description
+Given a binary tree, find all paths that sum of the nodes in the path equals to a given number target.
+
+A valid path is from root node to any of the leaf nodes.
+
+Example
+Given a binary tree, and target = 5:
+
+     1
+    / \
+   2   4
+  / \
+ 2   3
+return
+
+[
+  [1, 2, 2],
+  [1, 4]
+]
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+**因为要求所有的path都从root出发，所以感觉用遍历（从上往下找）比分治（从下往上加）要好
+class Solution:
+    """
+    @param: root: the root of binary tree
+    @param: target: An integer
+    @return: all valid paths
+    """
+    def binaryTreePathSum(self, root, target):
+        # write your code here
+        res = []
+        path = []
+        
+        self.helper(root, path, res, 0, target)
+        return res
+        
+    def helper(self, root, path, res, sumpath, target):
+        if not root:
+            return
+        path.append(root.val)
+        sumpath += root.val
+        
+        if not root.left and not root.right and sumpath == target:
+            res.append(path[:])
+                
+        self.helper(root.left, path, res, sumpath, target)
+        self.helper(root.right, path, res, sumpath, target)
+        
+        path.pop()
