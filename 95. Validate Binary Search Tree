@@ -1,0 +1,57 @@
+判断二叉搜索树
+95. Validate Binary Search Tree
+
+**用中序遍历的方法：
+因为BST左边小右边大，所以中序序列（inorder)是一个升序序列
+不需要把inorder的序列全部写出，只需要看root.val是否小于lastval
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: The root of binary tree.
+    @return: True if the binary tree is BST, or false
+    """
+    def isValidBST(self, root):
+        # write your code here
+        self.lastval = None
+        self.isvalid = True
+        self.inorderTraverse(root)
+        return self.isvalid
+    
+    # 下面是一个中序遍历的基本框架，中间加入lastval和root.val比大小的部分
+    def inorderTraverse(self, root): 
+        if not root:
+            return
+        self.inorderTraverse(root.left)
+        if self.lastval != None and self.lastval >= root.val:
+            self.isvalid = False
+            return
+        self.lastval = root.val # 如果上面的满足了，则lastval更新为当前root值
+        self.inorderTraverse(root.right)
+
+
+**用分治法
+
+class Solution:
+    """
+    @param root: The root of binary tree.
+    @return: True if the binary tree is BST, or false
+    """
+    def isValidBST(self, root):
+        # write your code here
+        return self.divconq(root, -sys.maxint - 1, sys.maxint) python中整数的最大和最小的写法！！！
+    
+    def divconq(self, root, minval, maxval):
+        if not root:
+            return True
+        if root.val <= minval or root.val >= maxval:
+            return False
+            
+        return self.divconq(root.left, minval, root.val) and self.divconq(root.right, root.val, maxval)
