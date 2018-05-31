@@ -1,0 +1,43 @@
+152. Combinations
+
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+Example
+Given n = 4 and k = 2, a solution is:
+
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4]
+]
+
+
+和前面求全子集subsets的思路一致，只是只将长度为2的subset放入res即可
+注意这道题是从1开始而不是0
+
+import copy
+class Solution:
+    """
+    @param n: Given the range of numbers
+    @param k: Given the numbers of combinations
+    @return: All the combinations of k numbers out of 1..n
+    """
+    def combine(self, n, k):
+        # write your code here
+        res = []
+        subset = []
+        self.dfs(n, k, 1, subset, res)
+        return res
+    
+    def dfs(self, n, k, startInd, subset, res):
+        if len(subset) == k:
+            res.append(copy.deepcopy(subset))
+            
+        
+        for i in range(startInd, n + 1):
+            subset.append(i)
+            self.dfs(n, k, i + 1, subset, res)
+            subset.pop()
