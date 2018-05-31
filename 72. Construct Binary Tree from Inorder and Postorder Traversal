@@ -1,0 +1,27 @@
+72. Construct Binary Tree from Inorder and Postorder Traversal
+
+画图就懂了
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param inorder: A list of integers that inorder traversal of a tree
+    @param postorder: A list of integers that postorder traversal of a tree
+    @return: Root of a tree
+    """
+    def buildTree(self, inorder, postorder):
+        # write your code here
+        if not inorder:
+            return None
+        root = TreeNode(postorder[-1]) # 用postorder找到根
+        rootPos = inorder.index(postorder[-1]) # 在中序中找到根的位置
+        root.left = self.buildTree(inorder[ : rootPos], postorder[ : rootPos]) # 无论中序后序，中序根位置之前的都一定是根的左边（只是顺序不同）
+        root.right = self.buildTree(inorder[rootPos + 1:], postorder[rootPos : -1]) # 在中序中，中序根位置的右边一定是根的右子树，但后序中是从
+                                                                                    # 中序根位置本身直到倒数第二位
+        return root
