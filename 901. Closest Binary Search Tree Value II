@@ -1,0 +1,62 @@
+901. Closest Binary Search Tree Value II
+
+Given a non-empty binary search tree and a target value, find k values in the BST that are closest to the target.
+
+Example
+Given root = {1}, target = 0.000000, k = 1, return [1].
+
+Challenge
+Assume that the BST is balanced, could you solve it in less than O(n) runtime (where n = total nodes)?
+
+
+1 如果是用中序遍历得到从小到大的所有值，接下来的问题相当于二分法
+
+暴力方法。时间复杂度 O(n)O(n)，空间复杂度也是 O(n)O(n)
+
+先用 inorder traversal 求出中序遍历
+找到第一个 >= target 的位置 index
+从 index-1 和 index 出发，设置两根指针一左一右，获得最近的 k 个整数
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: the given BST
+    @param target: the given target
+    @param k: the given k
+    @return: k values in the BST that are closest to the target
+    """
+    def closestKValues(self, root, target, k):
+        # write your code here
+        values = []
+        self.traverse(root, values)
+        
+        for i in range(len(values)):
+            if values[i] >= target:
+                break
+        if i >= len(values):
+            return values[len(values) - k :]
+        
+        res = []
+        left, right = i - 1, i
+        for i in range(0, k):
+            if left >= 0 and (right >= len(values) or target - values[left] < values[right] - target):
+                res.append(values[left])
+                left -= 1
+            else:
+                res.append(values[right])
+                right += 1
+        
+        return res
+        
+    def traverse(self, root, values):
+        if not root:
+            return
+        self.traverse(root.left, values)
+        values.append(root.val)
+        self.traverse(root.right, values)
