@@ -1,0 +1,69 @@
+中序遍历： 左根右
+67. Binary Tree Inorder Traversal
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: A Tree
+    @return: Inorder in ArrayList which contains node values.
+    """
+    def inorderTraversal(self, root):
+        # write your code here
+        res = []
+        self.traverse(res, root)
+        return res
+    
+    def traverse(self, res, root):
+        if not root:
+            return 
+        self.traverse(res, root.left)
+        res.append(root.val)
+        self.traverse(res, root.right)
+-------------------------------------------------------------------------------------------------------
+非递归版的inorder
+
+遍历顺序为左、根、右
+
+如果根节点非空，将根节点加入到栈中。
+如果栈不空，取栈顶元素（暂时不弹出），
+如果左子树已访问过，或者左子树为空，则弹出栈顶节点，将其值加入数组，如有右子树，将右子节点加入栈中。
+如果左子树不为空，切未访问过，则将左子节点加入栈中，并标左子树已访问过。
+重复第二步，直到栈空。
+
+
+class Solution:
+    """
+    @param root: A Tree
+    @return: Inorder in ArrayList which contains node values.
+    """
+    def inorderTraversal(self, root):
+        # write your code here
+        res = []
+        stack = []
+        while root:
+            stack.append(root)
+            root = root.left
+        
+        while stack:
+            node = stack[-1]
+            res.append(node.val)            
+            
+            . 如果当前点不存在右子树，则是走到当前点的路径中，第一个左拐的点
+            if not node.right:
+                node = stack.pop()
+                while stack and stack[-1].right == node:
+                    node = stack.pop()
+
+            . 如果当前点存在右子树，那么就是右子树中“一路向西”最左边的那个点
+            else:
+                node = node.right
+                while node:
+                    stack.append(node)
+                    node = node.left
+        return res   
