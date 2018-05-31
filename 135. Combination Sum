@@ -1,0 +1,58 @@
+135. Combination Sum
+Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Example
+Given candidate set [2,3,6,7] and target 7, a solution set is:
+
+[7]
+[2, 2, 3]
+
+
+和subset题目的区别：
+1. 满足sum要求的才放入res
+2. 重要：元素可以重复取用
+3. 需要去重
+    i  可以把原数组先去重（反正同一个数可以多次取用，去重不会影响取数），python中直接set(),但是需要花费额外空间
+    ii 也可以像18题一样直接跳过去
+
+import copy
+class Solution:
+    """
+    @param candidates: A list of integers
+    @param target: An integer
+    @return: A list of lists of integers
+    """
+    def combinationSum(self, candidates, target):
+        # write your code here
+        res = []
+        if candidates is None:
+            return res
+        
+        candidates.sort()
+        
+        self.dfs(candidates, 0, [], target, res)
+        return res
+    
+    def dfs(self, candidates, startInd, subset, remaintarget, res):
+        if remaintarget == 0:
+            res.append(copy.deepcopy(subset))
+        
+        for i in range(startInd, len(candidates)):
+            if candidates[i] > remaintarget:
+                break
+            if i != 0 and candidates[i] == candidates[i - 1] and i > startInd:
+                continue
+            
+            subset.append(candidates[i])
+            
+            self.dfs(candidates, i, subset, remaintarget - candidates[i], res)
+            
+            subset.pop()
+
+与18题区别：
+1. dfs参数中加了一个remaintarget
+2. dfs函数中，res并不append所有的subset，而是只append满足条件的（remaintarget为0时候的）
+3. 下一层dfs的startInd依然是i而不是i+1（因为同一个元素可以重复挑）
+4. 当和已经大于target了，break
