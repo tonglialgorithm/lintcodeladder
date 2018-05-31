@@ -1,0 +1,90 @@
+33. N-Queens
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+
+Example
+There exist two distinct solutions to the 4-queens puzzle:
+
+[
+  // Solution 1
+  [".Q..",
+   "...Q",
+   "Q...",
+   "..Q."
+  ],
+  // Solution 2
+  ["..Q.",
+   "Q...",
+   "...Q",
+   ".Q.."
+  ]
+]
+Challenge
+Can you do it without recursion?
+
+
+
+
+import copy
+class Solution:
+    """
+    @param: n: The number of queens
+    @return: All distinct solutions
+    """
+    def solveNQueens(self, n):
+        # write your code here
+        res = []
+        if n <= 0:
+            return res
+        self.search(res, [], n)
+        return res
+    
+    def search(self, res, cols, n):
+        
+        if len(cols) == n:
+            drawcols = self.drawChessboard(cols)
+            res.append(copy.deepcopy(drawcols))
+            return
+        
+        for colInd in range(n):
+            if self.isValid(cols, colInd) == False:
+                continue
+            
+            cols.append(colInd)
+            self.search(res, cols, n)
+            cols.pop()
+    
+    
+    def drawChessboard(self, cols):
+        chessboard = []
+        for i in range(len(cols)):
+            tmp = ['.'] * len(cols)
+            tmp[cols[i]] = 'Q'
+            chessboard.append(''.join(tmp))
+        return chessboard
+            
+    
+    // 找规律：什么时候queens会冲突：
+    def isValid(self, cols, colInd):
+        currow = len(cols)
+        for rowInd in range(currow):
+
+            // 在同一个column中
+            if cols[rowInd] == colInd:
+                return False
+
+            // 在右上到左下的斜线上
+            if rowInd + cols[rowInd] == currow + colInd:
+                return False
+            // 在左上到右下的斜线上
+            if rowInd - cols[rowInd] == currow - colInd:
+                return False
+        return True
+
+这里的isValid函数用了O(n)的时间，不是最优解，可以用空间换时间，开三个数组sum[], diff[], visited[],具体见视频
+不过不改也没什么关系，因为本身的时间复杂度已经是O(n!)了
+
+总共的时间复杂度O(n^2 * n!)  
