@@ -1,0 +1,94 @@
+130. Heapify
+Given an integer array, heapify it into a min-heap array.
+
+For a heap array A, A[0] is the root of heap, and for each A[i], A[i * 2 + 1] is the left child of A[i] 
+and A[i * 2 + 2] is the right child of A[i].
+Example
+Given [3,2,1,4,5], return [1,2,3,4,5] or any legal heap array.
+
+Challenge
+O(n) time complexity
+
+
+解法一：基于 Siftup 的版本 O(nlogn)
+
+算法思路：
+
+对于每个元素A[i]，比较A[i]和它的父亲结点的大小，如果小于父亲结点，则与父亲结点交换。
+交换后再和新的父亲比较，重复上述操作，直至该点的值大于父亲。
+
+时间复杂度分析
+对于每个元素都要遍历一遍，这部分是 O(n)。
+每处理一个元素时，最多需要向根部方向交换 logn 次。
+因此总的时间复杂度是 O(nlogn)
+
+class Solution:
+    """
+    @param: A: Given an integer array
+    @return: nothing
+    """
+    def heapify(self, A):
+        # write your code here
+        for i in range(len(A)):
+            self.siftup(A, i)          
+    
+    
+    def siftup(self, A, pos):
+        while pos != 0:
+            parent = (pos - 1) / 2
+            if A[pos] >= A[parent]:
+                break
+            A[pos], A[parent] = A[parent], A[pos]
+            pos = parent  # 不要忘记把pos值重置为parent的位置值（然后继续向上调整）
+
+-------------------------------------------------------------------------------------
+
+解法二：基于 Siftdown 的版本 O(n)
+
+算法思路：
+
+初始选择最接近叶子的一个父结点，与其两个儿子中较小的一个比较，若大于儿子，则与儿子交换。
+交换后再与新的儿子比较并交换，直至没有儿子。
+再选择较浅深度的父亲结点，重复上述步骤。
+
+时间复杂度分析
+这个版本的算法，乍一看也是 O(nlogn)， 但是我们仔细分析一下，算法从第 n/2 个数开始，倒过来
+进行 siftdown。也就是说，相当于从 heap 的倒数第二层开始进行 siftdown 操作，倒数第二层的节
+点大约有 n/4 个， 这 n/4 个数，最多 siftdown 1次就到底了，所以这一层的时间复杂度耗费是 O(n/4)，
+然后倒数第三层差不多 n/8 个点，最多 siftdown 2次就到底了。所以这里的耗费是 O(n/8 * 2), 
+倒数第4层是 O(n/16 * 3)，倒数第5层是 O(n/32 * 4) ... 因此累加所有的时间复杂度耗费为：
+
+T(n) = O(n/4) + O(n/8 * 2) + O(n/16 * 3) ...
+然后我们用 2T - T 得到：
+
+2 * T(n) = O(n/2) + O(n/4 * 2) + O(n/8 * 3) + O(n/16 * 4) ... 
+T(n)     =          O(n/4)     + O(n/8 * 2) + O(n/16 * 3) ...
+
+2 * T(n) - T(n) = O(n/2) +O (n/4) + O(n/8) + ...
+                = O(n/2 + n/4 + n/8 + ... )
+                = O(n)
+因此得到 T(n) = 2 * T(n) - T(n) = O(n)
+
+class Solution:
+    """
+    @param: A: Given an integer array
+    @return: nothing
+    """
+    def heapify(self, A):
+        # write your code here
+        for i in range(len(A) / 2, -1, -1):
+            self.siftdown(A, i)
+    
+    def siftdown(self, A, pos):
+        while pos < len(A):
+            smallest = pos
+            if pos * 2 + 1 < len(A) and A[pos * 2 + 1] < A[smallest]:
+                smallest = pos * 2 + 1
+            if pos * 2 + 2 < len(A) and A[pos * 2 + 2] < A[smallest]:
+                smallest = pos * 2 + 2
+            if pos == smallest:
+                break
+            
+            A[smallest], A[pos] = A[pos], A[smallest]
+            
+            pos = smallest
