@@ -1,0 +1,53 @@
+570. Find the Missing Number II
+
+Giving a string with number from 1-n in random order, but miss 1 number.Find that number.
+
+Example
+Given n = 20, str = 19201234567891011121314151618
+
+return 17
+
+每輪檢查 1~2 位數, 不重複、在 1~n 範圍內、首位不為0，直到完成遍歷 str 時，找出 missing number。
+
+class Solution:
+    """
+    @param n: An integer
+    @param str: a string with number from 1-n in random order and miss one number
+    @return: An integer
+    """
+    def findMissing2(self, n, str):
+        # write your code here
+        self.missing = -1
+        isFound = [False for i in range(n + 1)]
+        self.dfs(n, str, 0, isFound)
+        return self.missing
+    
+    def dfs(self, n, str, start, isFound):
+        // found the missing value
+        if self.missing != -1:
+            return
+        
+        // finished the str, get the missing num
+        if start == len(str):
+            for i in range(1, n + 1):
+                if isFound[i] == False:
+                    self.missing = i
+                    return             
+        
+        // if first char is 0, the combination is not gonna work
+        if str[start] == '0':
+            return
+        
+        // check single & double chars separately
+        for ch in range(1, 3):
+            if ch + start > len(str):
+                break
+            num = str[start:start+ch]
+            intnum = int(num)
+            if intnum > 0 and intnum <= n and isFound[intnum] == False:
+                isFound[intnum] = True
+                self.dfs(n, str, start + ch, isFound)
+                isFound[intnum] = False
+            
+        return
+            
