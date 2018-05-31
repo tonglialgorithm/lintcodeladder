@@ -1,0 +1,53 @@
+136. Palindrome Partitioning
+
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return all possible palindrome partitioning of s.
+
+Example
+Given s = "aab", return:
+
+[
+  ["aa","b"],
+  ["a","a","b"]
+]
+划分成回文串的方案
+
+见课程视频：挑缝隙
+
+（需要仔细看一下程序）
+import copy
+class Solution:
+    """
+    @param: s: A string
+    @return: A list of lists of string
+    """
+    def partition(self, s):
+        # write your code here
+        res = []
+        if not s:
+            return res
+        subset = []
+        self.dfs(s, 0, subset, res)
+        return res
+    
+    def dfs(self, s, startInd, subset, res):
+        if startInd == len(s):
+            res.append(copy.deepcopy(subset))
+            return
+        
+        for i in range(startInd, len(s)):
+            substring = s[startInd : i + 1]
+            if self.isPalindrome(substring) is False:
+                continue
+            subset.append(substring)
+            self.dfs(s, i + 1, subset, res)
+            subset.pop()
+        
+    def isPalindrome(self, s):
+        for i in range(len(s)):
+            if s[i] != s[len(s)-1-i]: 
+                return False
+        return True
+
+回文串可以用动态规划预处理，见之前的课程
