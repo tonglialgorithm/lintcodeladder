@@ -1,0 +1,83 @@
+192. Wildcard Matching
+
+Implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+
+Example
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "*") → true
+isMatch("aa", "a*") → true
+isMatch("ab", "?*") → true
+isMatch("aab", "c*a*b") → false
+
+
+使用深度优先搜索 + 记忆化的版本。
+
+用一个二维的 boolean 数组来当记忆化数组，记录 s 从 sIndex 开始的后缀 能够匹配上 p 从 pIndex 开始的后缀
+
+
+class Solution:
+    """
+    @param s: A string 
+    @param p: A string includes "?" and "*"
+    @return: is Match?
+    """
+    def isMatch(self, s, p):
+        # write your code here
+        if p is None or s is None:
+            return False
+        
+        n, m = len(s), len(p)
+        memo = [[False for i in xrange(m + 1)] for j in xrange(n + 1)]
+        visited = [[False for i in xrange(m + 1)] for j in xrange(n + 1)]
+        
+        return self.dfs(s, 0, p, 0, memo, visited)
+    
+    def dfs(self, s, sInd, p, pInd, memo, visited):
+
+        // 如果 p 从pIdex开始是空字符串了，那么 s 也必须从 sIndex 是空才能匹配上
+        if pInd == len(p):
+            return sInd == len(s)
+
+        // 如果 s 从 sIndex 是空，那么p 必须全是 * 
+        if sInd == len(s):
+            return self.allStar(p, pInd)
+        
+        // 对sInd和pInd这个组合会出现的情况分析完毕了，则返回这个情况的boolean(到底是否匹配)
+        // 这里是在执行memoization，没有这句会超时
+        if visited[sInd][pInd]:
+            return memo[sInd][pInd]
+        
+        // 下面开始正文，分情况讨论
+        sChar = s[sInd]
+        pChar = p[pInd]
+        match = False
+        
+        if pChar == '*':
+            // p是*的话，只要当前s串和pChar之后的串match（*为空），或者sChar之后的串和p当前串匹配
+                                                             // 因为*匹配any sequence, 所以第二种情况中，再下一层pChar依然是同一个*，s则后移，对应例子为
+                                                             // isMatch("aa", "*") → true 的情况
+            match = self.dfs(s, sInd, p, pInd + 1, memo, visited) or self.dfs(s, sInd + 1, p, pInd, memo, visited)
+        else:
+            // p不是*的话：match为true需要满足s和p当前字符一样或p为?, 并且s之后和p之后的字符串要match，这两个条件。
+            match = self.charMatch(sChar, pChar) and self.dfs(s, sInd + 1, p, pInd + 1, memo, visited)
+        
+        visited[sInd][pInd] = True
+        memo[sInd][pInd] = match
+        return match
+    
+    def charMatch(self, sChar, pChar): // *的情况在dfs中讨论了，所以这里不再包括，只考虑?情况
+        return sChar == pChar or pChar == '?'
+    
+    def allStar(self, p, pInd):
+        for i in range(pInd, len(p)):
+            if p[i] != '*':
+                return False
+        return True
+        
+        
