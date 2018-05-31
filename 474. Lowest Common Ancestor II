@@ -1,0 +1,74 @@
+一种变体（比原题简单）:
+474. Lowest Common Ancestor II
+与上一题只有一个区别:
+The node has an extra attribute parent which point to the father of itself. The root's parent is null.
+
+所以完全可以用和上一题完全相同的方式解决,但是会浪费parent attribute的条件
+
+**方法一:
+写辅助函数找到两个node分别的path2root,即将该点直到root的所有node都按顺序存入一个叫path的list
+然后这两个list从尾向头比较,当找到不同的node时,其前面的那个node就是LCA
+
+"""
+Definition of ParentTreeNode:
+class ParentTreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.parent, self.left, self.right = None, None, None
+"""
+
+
+class Solution:
+    """
+    @param: root: The root of the tree
+    @param: A: node in the tree
+    @param: B: node in the tree
+    @return: The lowest common ancestor of A and B
+    """
+    def lowestCommonAncestorII(self, root, A, B):
+        # write your code here
+        pathA = self.getpath2root(A)
+        pathB = self.getpath2root(B)
+        
+        indA = len(pathA) - 1
+        indB = len(pathB) - 1
+        
+        while indA >= 0 and indB >= 0:
+            if pathA[indA] != pathB[indB]:
+                break
+            LCA = pathA[indA]
+            indA -= 1
+            indB -= 1
+        
+        return LCA
+    
+    def getpath2root(self, node):
+        path = []
+        while node:
+            path.append(node)
+            node = node.parent
+        return path
+
+
+**方法二：
+用一个字典存储从A到root的路径。
+然后从B开始，查看B及其parent是否在字典中，若在则返回B（为LCA）
+
+class Solution:
+    """
+    @param: root: The root of the tree
+    @param: A: node in the tree
+    @param: B: node in the tree
+    @return: The lowest common ancestor of A and B
+    """
+    def lowestCommonAncestorII(self, root, A, B):
+        dict = {}
+        
+        while A:
+            dict[A] = True
+            A = A.parent
+        
+        while B:
+            if B in dict:
+                return B
+            B = B.parent
