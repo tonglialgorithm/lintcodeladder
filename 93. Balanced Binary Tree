@@ -1,0 +1,41 @@
+判断平衡二叉树：
+93. Balanced Binary Tree
+平衡二叉树：左子树和右子树都是平衡的，且高度差不超过1
+
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: The root of binary tree.
+    @return: True if this Binary tree is Balanced, or false.
+    """
+    def isBalanced(self, root):
+        # write your code here
+        self.not_balanced = -1
+        return self.maxDepth(root) != self.not_balanced
+    
+    # maxDepth函数的作用：如果树是平衡的，return 其高度；如果不是，return -1 （not_balanced）
+    def maxDepth(self, root): 
+        # 处理一下异常情况
+        if not root:     
+            return 0 # 空树也是平衡的，所以返回其高度
+
+        # 无脑分治左右
+        left = self.maxDepth(root.left)
+        right = self.maxDepth(root.right)
+        
+        # 平衡的条件一： 左右子树都平衡，否则整树不平衡
+        if left == self.not_balanced or right == self.not_balanced:
+            return self.not_balanced
+        # 平衡的条件二：左右子树高度差不超过1
+        if abs(left - right) > 1:
+            return self.not_balanced
+        # 如果树是平衡的，return 其高度
+        return max(left, right) + 1 
