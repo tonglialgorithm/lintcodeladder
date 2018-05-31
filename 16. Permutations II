@@ -1,0 +1,61 @@
+有重复的排列：
+
+16. Permutations II
+Given a list of numbers with duplicate number in it. Find all unique permutations.
+
+Example
+For numbers [1,2,2] the unique permutations are:
+
+[
+  [1,2,2],
+  [2,1,2],
+  [2,2,1]
+]
+Challenge
+Using recursion to do it is acceptable. If you can do it without recursion, that would be great!
+
+
+https://www.jiuzhang.com/tutorial/algorithm/441
+在上一题的基础上，做最小的改动
+import copy
+class Solution:
+    """
+    @param: :  A list of integers
+    @return: A list of unique permutations
+    """
+
+    def permuteUnique(self, nums):
+        # write your code here
+        res = []
+        if nums == None:
+            return res
+        visited = [False for i in range(len(nums))]
+        // 改动1. 为了去重需要sort
+        nums.sort()
+        self.dfs(nums, visited, [], res)
+        return res
+    
+    def dfs(self, nums, visited, permutation, res):
+        
+        if len(permutation) == len(nums):
+            res.append(copy.deepcopy(permutation))
+            return
+        
+          
+        for i in range(0, len(nums)):
+            if visited[i]:
+                continue
+            // 改动2：当前的数和它之前的相等，且之前的数没有被挑过，则跳过
+            if i > 0 and nums[i] == nums[i - 1] and visited[i - 1] == False:
+                continue
+            
+            permutation.append(nums[i])     
+            visited[i] = True
+            self.dfs(nums, visited, permutation, res)
+            
+            visited[i] = False
+            permutation.pop()
+
+时间复杂度：
+最坏的情况下（所有的数都不一样的全排列）：O(n!)
+有重复的话：O(S * n^2), S 为solution的个数
