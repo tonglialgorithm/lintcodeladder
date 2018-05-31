@@ -1,0 +1,55 @@
+34. N-Queens II
+Follow up for N-Queens problem.
+
+Now, instead outputting board configurations, return the total number of distinct solutions.
+
+Example
+For n=4, there are 2 distinct solutions.
+
+
+基本上就是不求res了，求sum
+但是只能写成self.sum才可以过，如果用sum然后代入函数parameter的形式就一直保持在初始值0
+
+class Solution:
+    """
+    @param n: The number of queens.
+    @return: The total number of distinct solutions.
+    """
+    def totalNQueens(self, n):
+        # write your code here
+        self.sum = 0
+        if n <= 0:
+            return 0
+        self.search([], n)
+        return self.sum
+    
+    def search(self, cols, n):
+        
+        if len(cols) == n:
+            self.sum += 1
+            return
+        
+        for colInd in range(n):
+            if self.isValid(cols, colInd) == False:
+                continue
+            
+            cols.append(colInd)
+            self.search(cols, n)
+            cols.pop()
+    
+    
+    def isValid(self, cols, colInd):
+        currow = len(cols)
+        for rowInd in range(currow):
+
+            
+            if cols[rowInd] == colInd:
+                return False
+
+            
+            if rowInd + cols[rowInd] == currow + colInd:
+                return False
+            
+            if rowInd - cols[rowInd] == currow - colInd:
+                return False
+        return True
