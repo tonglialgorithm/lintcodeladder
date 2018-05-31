@@ -1,0 +1,54 @@
+153. Combination Sum II
+Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Example
+Given candidate set [10,1,6,7,2,1,5] and target 8,
+
+A solution set is:
+
+[
+  [1,7],
+  [1,2,5],
+  [2,6],
+  [1,1,6]
+]
+
+和135题唯一区别是元素不能重复使用了
+import copy
+class Solution:
+    """
+    @param num: Given the candidate numbers
+    @param target: Given the target number
+    @return: All the combinations that sum to target
+    """
+    def combinationSum2(self, num, target):
+        # write your code here
+        res = []
+        if num is None:
+            return res
+        
+        num.sort()
+        
+        self.dfs(num, 0, [], target, res)
+        return res
+    
+    def dfs(self, num, startInd, subset, remaintarget, res):
+        if remaintarget == 0:
+            res.append(copy.deepcopy(subset))
+        
+        for i in range(startInd, len(num)):
+            if num[i] > remaintarget:
+                break
+            if i != 0 and num[i] == num[i - 1] and i > startInd:
+                continue
+            
+            subset.append(num[i])
+            
+            // 和135题的唯一区别：下一层dfs用i+1而不是i，因为第i个元素不能重复使用
+            self.dfs(num, i + 1, subset, remaintarget - num[i], res)
+            
+            subset.pop()
+
+follow up: 如果限定每个数选几次，改法见讲课视频
