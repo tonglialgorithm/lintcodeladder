@@ -1,0 +1,100 @@
+全子集问题
+17. Subsets
+Given a set of distinct integers, return all possible subsets.
+
+Example
+If S = [1,2,3], a solution is:
+
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+Challenge
+Can you do it in both recursively and iteratively?
+
+
+解答一：选或不选一个数
+详细讲解见小视频 https://www.jiuzhang.com/tutorial/algorithm/409
+需要用到deepcopy
+答案个数是2^n，构建每个答案的时间是n，所以是n * 2^n
+
+import copy
+class Solution:
+    """
+    @param nums: A set of numbers
+    @return: A list of lists
+    """
+    def subsets(self, nums):
+        res = []
+        // 需要区分nums is None 和len(nums) == 0的情况：前者nums不存在，返回[]; 后者nums=[], 返回[[]]
+        // 不能直接写if not nums, 因为if not nums包括了上述两种情况，对于nums=[]的情况将返回错误的值
+        if nums is None:
+            return res
+
+        // 这三行len(nums) == 0的情况可以去掉，因为其实已经可以被后面的cover了
+        if len(nums) == 0:
+            res.append([])
+            return res
+        
+        // 需要先排序，因为在每个subset中要求是有序的
+        nums.sort()
+        self.dfs(nums, 0, [], res)
+        return res
+
+        // 递归的定义
+    def dfs(self, nums, index, subset, res):
+        
+        // 递归的出口
+        // 判断是否走到了叶子节点的时候
+        if index == len(nums):
+            res.append(copy.deepcopy(subset))
+            return
+    
+        // 递归的拆解
+        subset.append(nums[index])
+        # 去左边(选择取当前值)
+        self.dfs(nums, index + 1, subset, res)
+        
+        # 去右边(选择不取当前值)
+        subset.pop() # 执行上一语句时，subset已被改写，需要先pop出去以恢复原状
+        self.dfs(nums, index + 1, subset, res)
+        
+        
+
+---------------------------------------------------------------------------------------        
+解答二：更通用的版本，可以拓展到排列类搜索的递归方式
+每步生成一个答案，确实是数节点个数，一共2^n    
+
+import copy
+class Solution:
+    """
+    @param nums: A set of numbers
+    @return: A list of lists
+    """
+    def subsets(self, nums):
+        # write your code here
+        res = []
+        if nums is None:
+            return res
+        
+        nums.sort()
+        
+        self.dfs(nums, 0, [], res)
+        return res
+    
+    def dfs(self, nums, startInd, subset, res):
+        res.append(copy.deepcopy(subset))
+        
+        for i in range(startInd, len(nums)):
+            // [1] -> [1,2]
+            subset.append(nums[i])
+            // 寻找所有以 [1,2] 开头的集合，并扔到 res
+            self.dfs(nums, i + 1, subset, res)
+            // [1,2] -> [1]  回溯
+            subset.pop()
