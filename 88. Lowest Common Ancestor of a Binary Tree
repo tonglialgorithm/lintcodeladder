@@ -1,0 +1,64 @@
+88. Lowest Common Ancestor of a Binary Tree
+
+Given the root and two nodes in a Binary Tree. Find the lowest common ancestor(LCA) of the two nodes.
+
+The lowest common ancestor is the node with largest depth which is the ancestor of both nodes.
+
+Assume two nodes are exist in tree.
+
+Example
+For the following binary tree:
+
+  4
+ / \
+3   7
+   / \
+  5   6
+LCA(3, 5) = 4
+
+LCA(5, 6) = 7
+
+LCA(6, 7) = 7
+
+
+如果两个都找到了, 则返回根
+如果只找到一个, 则返回找到的那一个
+否则返回空
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+
+class Solution:
+    """
+    @param: root: The root of the binary search tree.
+    @param: A: A TreeNode in a Binary.
+    @param: B: A TreeNode in a Binary.
+    @return: Return the least common ancestor(LCA) of the two nodes.
+    """
+    def lowestCommonAncestor(self, root, A, B):
+        if not root:
+            return None
+
+        # found an answer node or it can possibly be the LCA node
+        if root is A or root is B:
+            return root
+        
+        # devide
+        left = self.lowestCommonAncestor(root.left, A, B) #这两行其实是回传值的过程
+        right = self.lowestCommonAncestor(root.right, A, B)
+        
+        # conquer:
+        ## when found answers on both left and right child, this node is LCA
+        if left and right: # 一边一个
+            return root
+
+        # pick a side that is not None if available
+        if left:  # 只在左边，则回传左边得到的答案
+            return left
+        if right: # 只在右边，则回传右边得到的答案
+            return right
