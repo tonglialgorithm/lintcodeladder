@@ -1,0 +1,76 @@
+611. Knight Shortest Path
+
+Given a knight in a chessboard (a binary matrix with 0 as empty and 1 as barrier) with a source position, find the 
+shortest path to a destination position, return the length of the route.
+Return -1 if knight can not reached.
+
+source and destination must be empty.
+Knight can not enter the barrier.
+
+
+Clarification
+If the knight is at (x, y), he can get to the following positions in one step:
+
+(x + 1, y + 2)
+(x + 1, y - 2)
+(x - 1, y + 2)
+(x - 1, y - 2)
+(x + 2, y + 1)
+(x + 2, y - 1)
+(x - 2, y + 1)
+(x - 2, y - 1)
+Example
+[[0,0,0],
+ [0,0,0],
+ [0,0,0]]
+source = [2, 0] destination = [2, 2] return 2
+
+[[0,1,0],
+ [0,0,0],
+ [0,0,0]]
+source = [2, 0] destination = [2, 2] return 6
+
+[[0,1,0],
+ [0,0,1],
+ [0,0,0]]
+source = [2, 0] destination = [2, 2] return -1
+
+"""
+Definition for a point.
+class Point:
+    def __init__(self, a=0, b=0):
+        self.x = a
+        self.y = b
+"""
+
+class Solution:
+    """
+    @param grid: a chessboard included 0 (false) and 1 (true)
+    @param source: a point
+    @param destination: a point
+    @return: the shortest path 
+    """
+    def shortestPath(self, grid, source, destination):
+        # write your code here
+        if len(grid) == 0:
+            return -1
+        
+        row = len(grid)
+        col = len(grid[0])
+        
+        queue = [source]
+        step = 0
+        
+        move = [(1, 2), (1, -2), (-1, 2), (-1, -2), (2, 1), (2, -1), (-2, 1), (-2, -1)]
+        while queue:                  # 这一部分进行分层的宽搜，目标是找出下一步可以跳到的所有点（满足跳步规则且该点不为1），然后标记成1
+            size = len(queue)
+            for i in range(size):
+                head = queue.pop(0)
+                if head.x == destination.x and head.y == destination.y:
+                    return step
+                for dx, dy in move:
+                    if 0 <= head.x + dx < row and 0 <= head.y + dy < col and grid[head.x + dx][head.y + dy] == 0:
+                        grid[head.x + dx][head.y + dy] = 1
+                        queue.append(Point(head.x + dx, head.y + dy))  # 此处需要注意 一定要用Point(x, y)的格式，不要忘记Point
+            step += 1
+        return -1
