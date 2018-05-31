@@ -1,0 +1,56 @@
+全子集问题的follow up： 详见小视频https://www.jiuzhang.com/tutorial/algorithm/408
+18. Subsets II
+
+Given a list of numbers that may has duplicate numbers, return all possible subsets
+
+Example
+If S = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+Challenge
+Can you do it in both recursively and iteratively?
+
+
+import copy
+class Solution:
+    """
+    @param nums: A set of numbers.
+    @return: A list of lists. All valid subsets.
+    """
+    def subsetsWithDup(self, nums):
+        # write your code here
+        res = []
+        if nums is None:
+            return res
+        
+        nums.sort()
+        
+        self.dfs(nums, 0, [], res)
+        return res
+    
+    def dfs(self, nums, startInd, subset, res):
+        res.append(copy.deepcopy(subset))
+        
+        for i in range(startInd, len(nums)):
+            // 这个if条件是唯一与17题不同之处（新加的），目的是
+            // ex. [1,2,2] 
+            // i != 0 保证i-1时下标不越界
+            // nums[i] == nums[i - 1] 判断nums[i]的前一个值是否与其一样
+            // i>startInd实际是判断i是否等于startInd, i.e.前一个数有否被挑过：上一个数挑的是startInd - 1, 当前数i >= startInd + 1，则前一个数startInd一定被挑过
+            // 也就是说明，如果是[1,2,2]的情况，则由下一层dfs处理（加入第二个2），因此这一层的if语句不会影响第二个2的加入，但在下一层执行完返回pop之后，
+            // 也就是[1]后面再次加入下一个数的时候，把第二个2跳过去，
+            // 如果不加i > startInd， 则在执行下下层时，[1,2,2]的组合会被错过（即当i = startInd时，即使与前一个数字相同，也需要被挑入）
+
+            if i != 0 and nums[i] == nums[i - 1] and i > startInd:
+                continue
+
+            subset.append(nums[i])
+            self.dfs(nums, i + 1, subset, res)
+            subset.pop()
