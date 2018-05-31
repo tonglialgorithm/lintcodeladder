@@ -1,0 +1,84 @@
+121. Word Ladder II
+Given two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+
+Only one letter can be changed at a time
+Each intermediate word must exist in the dictionary
+Example
+Given:
+start = "hit"
+end = "cog"
+dict = ["hot","dot","dog","lot","log"]
+Return
+  [
+    ["hit","hot","dot","dog","cog"],
+    ["hit","hot","lot","log","cog"]
+  ]
+
+第一种方法：
+end -> start : bfs找到最短路径的长度
+start -> end : dfs找到所有可能
+
+
+import copy
+class Solution:
+    """
+    @param: start: a string
+    @param: end: a string
+    @param: dict: a set of string
+    @return: a list of lists of string
+    """
+    def findLadders(self, start, end, dict):
+        # write your code here
+        results = []
+        map = {}
+        distance = {}
+        
+        dict.add(start)
+        dict.add(end)
+        
+        self.bfs(map, distance, end, start, dict)
+        path = []
+        self.dfs(results, path, start, end, distance, map)
+        
+        return results
+    
+    def dfs(self, results, path, crt, end, distance, map):
+        path.append(crt)
+        if crt == end:
+            results.append(copy.deepcopy(path))
+        else:
+            for next in map[crt]:
+                if next in distance and distance[crt] == distance[next] + 1:
+                    self.dfs(results, path, next, end, distance, map)
+        path.pop()
+        
+    
+    def bfs(self, map, distance, start, end, dict):
+        queue = []
+        queue.append(start)
+        distance[start] = 0
+        for word in dict:
+            map[word] = []
+        
+        while queue:
+            crt = queue.pop(0)
+            nextlist = self.expand(crt, dict)
+            for next in nextlist:
+                map[next].append(crt)
+                if next not in distance:
+                    distance[next] = distance[crt] + 1
+                    queue.append(next)
+                    
+    
+    def expand(self, crt, dict):
+        expansion = []
+        for i in range(len(crt)):
+            for code in range(ord('a'), ord('z') + 1):
+                ch = chr(code)
+                if ch != crt[i]:
+                    expanded = crt[:i] + ch + crt[i+1:]
+                    if expanded in dict:
+                        expansion.append(expanded)
+        return expansion
+     
+        
