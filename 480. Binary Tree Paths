@@ -1,0 +1,85 @@
+480. Binary Tree Paths
+
+Description
+Given a binary tree, return all root-to-leaf paths.
+
+Example
+Given the following binary tree:
+
+   1
+ /   \
+2     3
+ \
+  5
+All root-to-leaf paths are:
+
+[
+  "1->2->5",
+  "1->3"
+]
+
+
+**分治法：
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: the root of the binary tree
+    @return: all root-to-leaf paths
+    """
+    def binaryTreePaths(self, root):
+        # write your code here
+        res = []
+        if not root:
+            return []
+        
+        leftpaths = self.binaryTreePaths(root.left)
+        rightpaths = self.binaryTreePaths(root.right)
+        
+        for item in leftpath:
+            res.append(str(root.val) + '->' + str(item))
+        for item in rightpath:
+            res.append(str(root.val) + '->' + str(item))
+        
+        # 处理当前节点为最下层叶子节点的情况，一般来说分治法不用这样做，此题特殊
+        if not root.left and not root.right:
+            res.append(str(root.val))
+        
+        return res
+
+------------------------------------------------------------------------------------------------------
+** 遍历法（traverse）
+
+class Solution:
+    """
+    @param root: the root of the binary tree
+    @return: all root-to-leaf paths
+    """
+    def binaryTreePaths(self, root):
+        # write your code here
+        res = []
+        if not root:
+            return []
+        
+        self.helper(root, str(root.val), res) # helper函数的初始参数（在root时）
+        return res
+    
+    def helper(self, root, path, res):
+        if not root:
+            return
+        if not root.left and not root.right: # 到底的情况
+            res.append(path)
+            return
+        if root.left:
+            self.helper(root.left, path + '->' + str(root.left.val), res)
+        if root.right:
+            self.helper(root.right, path + '->' + str(root.right.val), res)
+
+***两种方法区别：遍历法的helper函数中要带着res，且遍历法是从root点出发，每次向下延伸path，而分治是每次向上延伸path
