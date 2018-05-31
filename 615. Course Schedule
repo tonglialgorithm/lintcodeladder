@@ -1,0 +1,51 @@
+615. Course Schedule
+There are a total of n courses you have to take, labeled from 0 to n - 1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+Example
+Given n = 2, prerequisites = [[1,0]]
+Return true
+
+Given n = 2, prerequisites = [[1,0],[0,1]]
+Return false
+
+
+
+题目就是构造有向图的过程
+        
+        
+class Solution:
+    """
+    @param: numCourses: a total of n courses
+    @param: prerequisites: a list of prerequisite pairs
+    @return: true if can finish all courses or false
+    """
+    def canFinish(self, numCourses, prerequisites):
+        # initialize入度和每个node发散出去的边
+        indegree = [0] * numCourses
+        edge = {i: [] for i in xrange(numCourses)}
+        
+        # 根据prerequisite, 完善边和入度
+        for i, j in prerequisites:
+            edge[j].append(i)
+            indegree[i] += 1
+        
+        # initialize queue和count，并把初始入度为0的放入queue    
+        queue, count = [], 0
+        for i in xrange(numCourses):
+            if indegree[i] == 0:
+                queue.append(i)
+        
+        # 不分层遍历的bfs
+        while queue:
+            course = queue.pop(0)
+            count += 1
+            for c in edge[course]:
+                indegree[c] -= 1
+                if indegree[c] == 0:
+                    queue.append(c)
+        
+        return count == numCourses
