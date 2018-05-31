@@ -1,0 +1,35 @@
+680. Split String
+Give a string, you can choose to split the string after one character or two adjacent characters, 
+and make the string to be composed of only one character or two characters. Output all possible results.
+
+Example
+Given the string "123"
+return [["1","2","3"],["12","3"],["1","23"]]
+
+
+import copy
+class Solution:
+    """
+    @param: : a string to be split
+    @return: all possible split string array
+    """
+
+    def splitString(self, s):
+        # write your code here
+        res = []
+        if s is None:
+            return res
+        subset = []
+        self.dfs(s, subset, res)
+        return res
+    
+    // s is the string, 每次都先选一个字符, 然后再选第一和第二个字符, 最后把剩下的字符串传下去递归
+    def dfs(self, s, subset, res):
+        if s == "":
+            res.append(copy.deepcopy(subset))
+            return
+        for i in range(1, 3):
+            if i <= len(s):
+                subset.append(s[:i])
+                self.dfs(s[i:], subset, res)
+                subset.pop()
