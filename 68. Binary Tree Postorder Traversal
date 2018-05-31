@@ -1,0 +1,27 @@
+后序遍历： 左右根
+68. Binary Tree Postorder Traversal
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: A Tree
+    @return: Postorder in ArrayList which contains node values.
+    """
+    def postorderTraversal(self, root):
+        # write your code here
+        res = []
+        self.traverse(res, root)
+        return res
+    
+    def traverse(self, res, root):
+        if not root:
+            return
+        self.traverse(res, root.left)
+        self.traverse(res, root.right)
+        res.append(root.val)
