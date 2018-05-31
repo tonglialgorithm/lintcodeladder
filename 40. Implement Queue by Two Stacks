@@ -1,0 +1,69 @@
+40. Implement Queue by Two Stacks
+As the title described, you should only use two stacks to implement a queue's actions.
+
+The queue should support push(element), pop() and top() where pop is pop the first(a.k.a front) element in the queue.
+
+Both pop and top methods should return the value of first element.
+
+Example
+push(1)
+pop()     // return 1
+push(2)
+push(3)
+top()     // return 2
+pop()     // return 2
+Challenge
+implement it by two stacks, do not use any other data structure and push, pop and top should be O(1) by AVERAGE.
+
+
+思路:
+现在我们已经有了两个栈stack1和stack2，最暴力的做法，当需要往队列中加入元素时，可以往其中一个栈stack2中加入元素，
+当需要得到队头元素时，只需要将stack2中的元素倒入到stack1中，再取stack1的头元素就可以了，如果是需要删掉队头元素，
+那么直接pop stack1的栈顶元素就可以了，再将stack1中的元素再倒入到stack2中，以便下一次的加入元素。
+上面的实现中，我们每取一次队头元素或者删掉队头元素，我们都需要将stack2中的元素先倒入到stack1中，再从stack1中倒回去，
+每次需要倒两边十分麻烦，那么是否有更加简便一些的方法呢？答案当然是有的，其实当我们将stack2中的元素倒入到stack1中的时候，
+我们发现stack1中的元素的顺序就是按照队列的先进先出顺序，那么我们不再将stack1中的元素倒入到stack2中，在获取队头元素或者
+删除队头元素的时候，我们先判断stack1是否为空，如果不为空，从stack1中取即可，如果为空，那么将stack2中的元素倒入到stack1中，
+每次加入元素的时候都是往stack2中加入元素。
+
+在pop()和top()中都需要先查看stack1是否空，若是，则将stack2导入，若不是，则直接返回stack1的最后一个值。所以重复的部分单独写成一个adjust函数
+
+class MyQueue:
+    
+    def __init__(self):
+        # do intialization if necessary
+        self.stack1 = []
+        self.stack2 = []
+
+    """
+    @param: element: An integer
+    @return: nothing
+    """
+    def push(self, element):
+        # write your code here
+        self.stack2.append(element)
+        
+
+    """
+    @return: An integer
+    """
+    def pop(self):
+        # write your code here
+        self.adjust()
+        return self.stack1.pop()
+        
+
+    """
+    @return: An integer
+    """
+    def top(self):
+        # write your code here
+        self.adjust()
+        return self.stack1[-1]
+    
+    def adjust(self):
+        if len(self.stack1) == 0:
+            while self.stack2:
+                item = self.stack2.pop()
+                self.stack1.append(item)
+        
