@@ -1,0 +1,96 @@
+另一种变体（比原题难）：
+578. Lowest Common Ancestor III
+
+与原题有一个区别：有可能找不到（A或B有可能不在tree中）
+抄的，不是很懂
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        this.val = val
+        this.left, this.right = None, None
+"""
+
+class Solution:
+    """
+    @param: root: The root of the binary tree.
+    @param: A: A TreeNode
+    @param: B: A TreeNode
+    @return: Return the LCA of the two nodes.
+    """
+    def lowestCommonAncestor3(self, root, A, B):
+        # 因为不一定有答案，所以从helper函数需要知道究竟A，B都在不在
+        # 这里的a,b为boolean，表示存在性
+        a, b, lca = self.helper(root, A, B)
+        if a and b:
+            return lca
+        return None
+    
+    def helper(self, root, A, B): # helper函数返回三个东西：A在否，B在否，LCA的node
+        if not root:
+            return False, False, None
+        
+        left_a, left_b, left_node = self.helper(root.left, A, B)
+        right_a, right_b, right_node = self.helper(root.right, A, B)
+        
+        # A B on different sides，root为lca
+        if (left_a and right_b) or (left_b and right_a):
+            return True, True, root
+        
+        # otherwise
+        flag_a = left_a or right_a # A存在否
+        flag_b = left_b or right_b # B存在否
+        LCA = left_node or right_node # 其实这三行应该是考虑A,B都在子树找到了，回传时的赋值
+        
+        # 上面没有包括的一种情况：A/B 有可能并不在left或right，而在当前root
+        if root == A:
+            flag_a = True
+            if flag_b:
+                LCA = A
+        if root == B:
+            flag_b = True
+            if flag_a:
+                LCA = B
+        return flag_a, flag_b, LCA
+        
+        
+** 九章给的解法比较清楚：
+
+class Solution:
+    """
+    @param: root: The root of the binary tree.
+    @param: A: A TreeNode
+    @param: B: A TreeNode
+    @return: Return the LCA of the two nodes.
+    """
+    def lowestCommonAncestor3(self, root, A, B):
+        # write your code here
+        a, b, lca = self.helper(root, A, B)
+        if a and b:
+            return lca
+        return None
+    
+    def helper(self, root, A, B):
+        if not root:
+            return False, False, None
+        
+        left_a, left_b, left_node = self.helper(root.left, A, B)
+        right_a, right_b, right_node = self.helper(root.right, A, B)
+        
+        # judge whether A， B exist in the tree
+        a = left_a or right_a or root == A
+        b = left_b or right_b or root == B
+        
+        # 以下是在区分可能出现的不同情况：A或B在root，A B分别在左右，A B都在左/都在右，以及Otherwise就返回None
+        if root == A or root == B:
+            return a, b, root
+            
+        if left_node and right_node:
+            return a, b, root
+        if left_node:
+            return a, b, left_node
+        if right_node:
+            return a, b, right_node
+        
+        return a, b, None
