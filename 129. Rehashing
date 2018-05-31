@@ -1,0 +1,86 @@
+重哈希
+129. Rehashing
+The size of the hash table is not determinate at the very beginning. If the total size of keys is 
+too large (e.g. size >= capacity / 10), we should double the size of the hash table and rehash every 
+keys. Say you have a hash table looks like below:
+
+size=3, capacity=4
+
+[null, 21, 14, null]
+       ↓    ↓
+       9   null
+       ↓
+      null
+The hash function is:
+
+int hashcode(int key, int capacity) {
+    return key % capacity;
+}
+here we have three numbers, 9, 14 and 21, where 21 and 9 share the same position as they all have the 
+same hashcode 1 (21 % 4 = 9 % 4 = 1). We store them in the hash table by linked list.
+
+rehashing this hash table, double the capacity, you will get:
+
+size=3, capacity=8
+
+index:   0    1    2    3     4    5    6   7
+hash : [null, 9, null, null, null, 21, 14, null]
+Given the original hash table, return the new hash table after rehashing .
+
+Example
+Given [null, 21->9->null, 14->null, null],
+
+return [null, 9->null, null, null, null, 21->null, 14->null, null]
+
+
+算扩容之后的 size (origin_len * 2)
+遍历原来的 hashtable 和每个 listnode
+重算在 new_hashtable 的 index
+在新的位置已经有 node 就到 tails 里面找 tail 串，否则就初始化 heads[i] 和 tails[i]
+
+"""
+Definition of ListNode
+class ListNode(object):
+
+    def __init__(self, val, next=None):
+        self.val = val
+        self.next = next
+"""
+class Solution:
+    """
+    @param hashTable: A list of The first node of linked list
+    @return: A list of The first node of linked list which have twice size
+    """
+    def rehashing(self, hashTable):
+        # write your code here
+        if not hashTable:
+            return
+        
+        // 建立新table
+        capacity = len(hashTable) * 2
+        newtable = [None] * capacity
+
+        // 遍历原table，如果遇到不是None的，则在newtable中做addnode操作，
+        // 最后返回newtable
+        for item in hashTable:
+            while item != None:
+                self.addnode(newtable, item.val)
+                item = item.next
+        return newtable
+    
+    // 对于rehashing函数中的有value的item，先找到该value在newtable的position（value mod长度）
+    // 如果该pos上是None，则直接将value转换成ListNode形式放上去
+    // 如果该pos上已经有东西了，则通过addnodelist操作把value用新node存在已有的node后面
+    def addnode(self, newtable, value):
+        newpos = value % len(newtable)
+        if newtable[newpos] == None:
+            newtable[newpos] = ListNode(value)
+        else:
+            self.addnodelist(newtable[newpos], value)
+    
+    // 在尾部加新node的过程
+    def addnodelist(self, node, value):
+        if node.next == None:
+            node.next = ListNode(value)
+        else:
+            self.addnodelist(node.next, value)
