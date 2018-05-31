@@ -1,0 +1,48 @@
+90. k Sum II
+Given n unique integers, number k (1<=k<=n) and target.
+
+Find all possible k integers where their sum is target.
+
+Example
+Given [1,2,3,4], k = 2, target = 5. Return:
+
+[
+  [1,4],
+  [2,3]
+]
+
+
+沿用之前的思路
+（熟练之后再扩展其他）
+import copy
+class Solution:
+    """
+    @param: A: an integer array
+    @param: k: a postive integer <= length(A)
+    @param: targer: an integer
+    @return: A list of lists of integer
+    """
+    def kSumII(self, A, k, target):
+        # write your code here
+        res = []
+        if A is None or k is None:
+            return res
+            
+        A.sort()
+        self.dfs(A, 0, k, [], target, res)
+        return res
+    
+    def dfs(self, A, startInd, remaincount, subset, remaintarget, res):
+        if remaincount == 0 and remaintarget == 0:
+            res.append(copy.deepcopy(subset))
+            return
+        
+        if remaincount == 0:
+            return
+        
+        for i in range(startInd, len(A)):
+            if A[i] > remaintarget:
+                break
+            subset.append(A[i])
+            self.dfs(A, i + 1, remaincount - 1, subset, remaintarget - A[i], res)
+            subset.pop()
