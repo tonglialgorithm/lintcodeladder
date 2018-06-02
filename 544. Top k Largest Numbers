@@ -1,0 +1,27 @@
+544. Top k Largest Numbers
+Given an integer array, find the top k largest numbers in it.
+Example
+Given [3,10,1000,-99,4,100] and k = 3.
+Return [1000, 100, 10].
+
+
+from heapq import heappush, heappop
+class Solution:
+    """
+    @param nums: an integer array
+    @param k: An integer
+    @return: the top k largest numbers in array
+    """
+    def topk(self, nums, k):
+        # write your code here
+        if not nums:
+            return None
+        
+        res = []
+        for num in nums:
+            heappush(res, num)
+            if len(res) > k:
+                heappop(res)
+        
+        res.sort(reverse = True)
+        return res
