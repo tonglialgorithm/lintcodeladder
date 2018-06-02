@@ -1,0 +1,45 @@
+526. Load Balancer
+Implement a load balancer for web servers. It provide the following functionality:
+Add a new server to the cluster => add(server_id).
+Remove a bad server from the cluster => remove(server_id).
+Pick a server in the cluster randomly with equal probability => pick().
+
+
+
+import random
+class LoadBalancer:
+    def __init__(self):
+        # do intialization if necessary
+        self.nums = []
+        self.pos_map = {}
+
+    """
+    @param: server_id: add a new server to the cluster
+    @return: nothing
+    """
+    def add(self, server_id):
+        # write your code here
+        if server_id not in self.pos_map:
+            self.pos_map[server_id] = len(self.nums)
+            self.nums.append(server_id)
+     
+
+    """
+    @param: server_id: server_id remove a bad server from the cluster
+    @return: nothing
+    """
+    def remove(self, server_id):
+        # write your code here
+        if server_id in self.pos_map:
+            idx, last = self.pos_map[server_id], self.nums[-1]
+            self.nums[idx], self.pos_map[last] = last, idx
+            self.nums.pop()
+            self.pos_map.pop(server_id, None)
+  
+
+    """
+    @return: pick a server in the cluster randomly with equal probability
+    """
+    def pick(self):
+        # write your code here
+        return self.nums[random.randint(0, len(self.nums) - 1)]
