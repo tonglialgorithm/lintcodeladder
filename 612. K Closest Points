@@ -1,0 +1,44 @@
+612. K Closest Points
+Given some points and a point origin in two dimensional space, find k points out of the some points which are nearest to origin.
+Return these points sorted by distance, if they are same with distance, sorted by x-axis, otherwise sorted by y-axis.
+Example
+Given points = [[4,6],[4,7],[4,4],[2,5],[1,1]], origin = [0, 0], k = 3
+return [[1,1],[2,5],[4,4]]
+
+
+"""
+Definition for a point.
+class Point:
+    def __init__(self, a=0, b=0):
+        self.x = a
+        self.y = b
+"""
+from heapq import heappush, heappop
+class Solution:
+    """
+    @param points: a list of points
+    @param origin: a point
+    @param k: An integer
+    @return: the k closest points
+    """
+    def kClosest(self, points, origin, k):
+        # write your code here
+        if not points:
+            return
+        
+        heap = []
+        for point in points:
+            neg_distance = 0 - self.get_distance(point, origin)
+            heappush(heap, (neg_distance, point))
+            if len(heap) > k:
+                heappop(heap)
+        
+        heap.sort(key = lambda x: (-x[0], x[1].x, x[1].y))
+        
+        return [p for _, p in heap]
+    
+    def get_distance(self, a, b):
+        if not a or not b:
+            return float('inf')
+        da, db = (a.x - b.x), (a.y - b.y)
+        return da * da + db * db
