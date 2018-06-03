@@ -1,0 +1,55 @@
+594. strStr II
+Implement strStr function in O(n + m) time.
+
+strStr return the first index of the target string in a source string. The length of the target string is m and the length of the source string is n.
+If target does not exist in source, just return -1.
+
+Example
+Given source = abcdef, target = bcd, return 1.
+
+
+Rabin-Karp法：
+
+class Solution:
+    """
+    @param: source: A source string
+    @param: target: A target string
+    @return: An integer as index
+    """
+    def strStr2(self, source, target):
+        # write your code here
+        if source is None or target is None:
+            return -1
+        
+        m = len(target)
+        power = 1
+        hashTarget = 0
+        hashSource = 0
+        base = 1000000
+        
+        if m == 0:
+            return 0
+        
+        for i in range(m):
+            power = power * 31 % base
+        
+        for i in range(m):
+            hashTarget = (hashTarget * 31 + ord(target[i]) - ord('a')) % base
+            if hashTarget < 0:
+                hashTarget += base
+            
+        
+        for i in range(len(source)):
+            hashSource = (hashSource * 31 + ord(source[i]) - ord('a')) % base
+            if hashSource < 0:
+                hashSource += base
+            if i < m - 1:
+                continue
+            if i >= m:
+                hashSource = hashSource - (ord(source[i - m]) - ord('a')) * power % base
+                if hashSource < 0:
+                    hashSource += base
+            if hashSource == hashTarget:
+                if source[i - m + 1: i + 1] == target:
+                    return i - m + 1
+        return -1
