@@ -1,0 +1,26 @@
+586. Sqrt(x) II
+Implement double sqrt(double x) and x >= 0.
+
+Compute and return the square root of x.
+
+Example
+Given n = 2 return 1.41421356
+
+class Solution:
+    """
+    @param: x: a double
+    @return: the square root of x
+    """
+    def sqrt(self, x):
+        # write your code here
+        left, right = 0, max(x, 1)
+        eps = 1e-12
+        
+        while right - left > eps:
+            mid = left + (right - left) / 2.0
+            if mid * mid <= x:
+                left = mid
+            else:
+                right = mid
+        
+        return left 
