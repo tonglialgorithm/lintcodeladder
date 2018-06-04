@@ -1,0 +1,41 @@
+457. Classical Binary Search
+Find any position of a target number in a sorted array. Return -1 if target does not exist.
+
+Example
+Given [1, 2, 2, 4, 5, 5].
+
+For target = 2, return 1 or 2.
+
+For target = 5, return 4 or 5.
+
+For target = 6, return -1.
+
+Challenge
+O(logn) time
+
+class Solution:
+    """
+    @param: nums: An integer array sorted in ascending order
+    @param: target: An integer
+    @return: An integer
+    """
+    def findPosition(self, nums, target):
+        # write your code here
+        if not nums or target is None:
+            return -1
+        
+        left, right = 0, len(nums) - 1
+        while left + 1 < right:
+            mid = left + (right - left) / 2
+            if nums[mid] == target:
+                return mid
+            if nums[mid] < target:
+                left = mid
+            else:
+                right = mid
+        
+        if nums[left] == target:
+            return left
+        if nums[right] == target:
+            return right
+        return -1
