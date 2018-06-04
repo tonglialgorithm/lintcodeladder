@@ -1,0 +1,81 @@
+841. String Replace
+Given two identical-sized string array A, B and a string S. All substrings A appearing in S are replaced by B.(Notice: From left to right, it must be replaced if it can be replaced. If there are multiple alternatives, replace longer priorities. After the replacement of the characters can't be replaced again.)
+
+Example
+Given A = ["ab","aba"], B = ["cc","ccc"], S = "ababa", return "cccba".
+
+In accordance with the rules, the substring that can be replaced is "ab" or "aba". Since "aba" is longer, we replace "aba" with "ccc".  
+Given A = ["ab","aba"], B = ["cc","ccc"] ,S = "aaaaa" ,return "aaaaa".
+
+S does not contain strings in A, so no replacement is done.
+Given A = ["cd","dab","ab"], B = ["cc","aaa","dd"], S = "cdab", return "ccdd".
+
+From left to right, you can find the "cd" can be replaced at first, so after the replacement becomes "ccab", then you can find "ab" can be replaced, so the string after the replacement is "ccdd".
+
+这个解法只适用于A和B对应的string的长度相等的情况
+如果不等，最后一步需要改
+class Solution:
+    """
+    @param a: The A array
+    @param b: The B array
+    @param s: The S string
+    @return: The answer
+    """
+    def stringReplace(self, a, b, s):
+        # Write your code here
+        mod = 1000000007
+        seed = 33
+        aHash = []
+        sHash = []
+        maxlen = -1
+        base = []
+        
+        for item in a:
+            ans = 0
+            maxlen = max(maxlen, len(item))
+            for j in item:
+                ans = (ans * seed + ord(j) - ord('a')) % mod
+            aHash.append(ans)
+        
+        ans = 0
+        sHash.append(ans)
+        for item in s:
+            ans = (ans * seed + ord(item) - ord('a')) % mod
+            sHash.append(ans)
+                
+        ans = 1
+        base.append(ans)
+        maxlen = max(maxlen, len(s))
+        for i in range(maxlen):
+            ans = ans * seed % mod
+            base.append(ans)
+            
+        ret = [i for i in s]
+        i = 0
+        while i <len(s):
+            maxlen = -1
+            index = 0
+            for j in range(len(a)):
+                length = len(a[j])
+                l = i
+                r = i + length
+                if r > len(s):
+                    continue
+                sHashValue = (sHash[r] - base[length] * sHash[i] % mod + mod) % mod
+                aHashValue = aHash[j]
+                if sHashValue == aHashValue and length > maxlen:
+                    #if s[l:r] == a[j]:
+                    maxlen = length
+                    index = j
+        
+            if maxlen != -1:
+                for j in range(maxlen):
+                    ret[i + j] = b[index][j]
+                i = i + maxlen - 1
+            i = i + 1
+        return "".join(ret)
+            
+            
+            
+        
+        
