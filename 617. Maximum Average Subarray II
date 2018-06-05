@@ -1,0 +1,47 @@
+617. Maximum Average Subarray II
+Given an array with positive and negative numbers, find the maximum average subarray which length should be greater or equal to given length k.
+
+Example
+Given nums = [1, 12, -5, -6, 50, 3], k = 3
+
+Return 15.667 // (-6 + 50 + 3) / 3 = 15.667
+
+
+
+class Solution:
+    """
+    @param: nums: an array with positive and negative numbers
+    @param: k: an integer
+    @return: the maximum average
+    """
+    def maxAverage(self, nums, k):
+        # write your code here
+        maxnum = -sys.maxint - 1
+        minnum = sys.maxint
+        
+        for num in nums:
+            maxnum = max(maxnum, num)
+            minnum = min(minnum, num)
+        
+        while maxnum - minnum > 1e-6:
+            mid = (minnum + maxnum) / 2.0
+            if self.existaverage(nums, k, mid):
+                minnum = mid
+            else:
+                maxnum = mid
+        
+        return minnum
+        
+    
+    def existaverage(self, nums, k, mid):
+        minSum = 0.0
+        sums = [0.0]
+        for i in range(len(nums)):
+            total = sums[i] + nums[i] - mid
+            sums.append(total)
+            if i >= k - 1:
+                minSum = min(minSum, sums[i + 1 - k])
+                if sums[i + 1] >= minSum:
+                    return True
+        return False
+                
