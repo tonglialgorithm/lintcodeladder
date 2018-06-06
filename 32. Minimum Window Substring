@@ -1,0 +1,47 @@
+32. Minimum Window Substring
+Given a string source and a string target, find the minimum window in source which will contain all the characters in target.
+
+Example
+For source = "ADOBECODEBANC", target = "ABC", the minimum window is "BANC"
+
+Challenge
+Can you do it in time complexity O(n) ?
+
+class Solution:
+    """
+    @param source : A string
+    @param target: A string
+    @return: A string denote the minimum window, return "" if there is no such a string
+    """
+    def minWindow(self, source , target):
+        # write your code here
+        tMap = {ch : 0 for ch in target}
+        sMap = {ch : 0 for ch in source}
+        
+        for ch in target:
+            tMap[ch] += 1
+        
+        res = ''
+        j = 0
+        minlen = len(source)
+        
+        for i in range(len(source)):
+            while j < len(source) and not self.contains(sMap, tMap):
+                sMap[source[j]] += 1
+                j += 1
+            if self.contains(sMap, tMap) and minlen >= j - i:
+                minlen = j - i
+                res = source[i : j]
+            sMap[source[i]] -= 1
+        
+        return res
+    
+    def contains(self, sMap, tMap):
+        for key, value in tMap.items():
+            if key not in sMap:
+                return False
+            if sMap[key] - value < 0:
+                return False
+        return True
+            
+             
