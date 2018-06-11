@@ -1,0 +1,52 @@
+144. Interleaving Positive and Negative Numbers
+Given an array with positive and negative integers. Re-range it to interleaving with positive and negative integers.
+Example
+Given [-1, -2, -3, 4, 5, 6], after re-range, it will be [-1, 5, -2, 4, -3, 6] or any other reasonable answer.
+Challenge
+Do it in-place and without extra memory.
+
+
+O(n) time, O(1) extra space
+先用两根指针分成左 - 右 + 两部分, 再进行穿插
+穿插需要分情况讨论 (左 - 右 + 的前提下) 
+  如果 - 多, 那么从第2个数和倒数第1个数开始交换
+  如果 + 多, 那么从第1个数和倒数第2个数开始交换
+  如果一样多, 那么从第1个数和倒数第1个数开始交换
+
+class Solution:
+    """
+    @param: A: An integer array.
+    @return: nothing
+    """
+    def rerange(self, A):
+        # write your code here
+        if A == None or len(A) <= 1:
+            return
+        
+        left, right = 0, len(A) - 1
+        
+        while left < right:
+            while left < right and A[left] < 0:
+                left += 1
+            while left < right and A[right] > 0:
+                right -= 1
+            if left < right:
+                A[left], A[right] = A[right], A[left]
+                left += 1
+                right -= 1
+        
+        if left * 2 > len(A):
+            self.interleave(A, 1, len(A) - 1)
+        elif left * 2 < len(A):
+            self.interleave(A, 0, len(A) - 2)
+        else:
+            self.interleave(A, 0, len(A) - 1)
+        
+        return
+    
+    def interleave(self, A, left, right):
+        while left < right:
+            A[left], A[right] = A[right], A[left]
+            left += 2
+            right -= 2
+        return   
