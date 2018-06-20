@@ -1,0 +1,56 @@
+598. Zombie in Matrix
+
+Given a 2D grid, each cell is either a wall 2, a zombie 1 or people 0 (the number zero, one, two).
+Zombies can turn the nearest people(up/down/left/right) into zombies every day, but can not through 
+wall. How long will it take to turn all people into zombies? Return -1 if can not turn all people into zombies.
+
+Example
+Given a matrix:
+
+0 1 2 0 0
+1 0 0 2 1
+0 1 0 0 0
+return 2
+
+和island那道题差不多
+class Solution:
+    """
+    @param grid: a 2D integer grid
+    @return: an integer
+    """
+    def zombie(self, grid):
+        # write your code here
+        m, n = len(grid), len(grid[0])
+        if m == 0 and n == 0:
+            return 0
+        
+        import Queue
+        q = Queue.Queue()
+        move = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        human = set()
+        day = 0
+        
+        for x in range(m):
+            for y in range(n):
+                if grid[x][y] == 1:
+                    q.put((x, y))
+                if grid[x][y] == 0:
+                    human.add((x, y))
+                    
+        if len(human) == 0:
+            return day
+            
+        while not q.empty():
+            size = q.qsize()
+            day += 1
+            for i in range(size):
+                x, y = q.get()
+                for dx, dy in move:
+                    if 0 <= x + dx < m and 0 <= y + dy < n and grid[x + dx][y + dy] == 0:
+                        grid[x + dx][y + dy] = 1
+                        q.put((x + dx, y + dy))
+                        human.discard((x + dx, y + dy))
+                
+            if len(human) == 0:
+                return day
+        return -1
