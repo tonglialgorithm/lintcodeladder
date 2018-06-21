@@ -1,0 +1,47 @@
+431. Connected Component in Undirected Graph
+Find the number connected component in the undirected graph. Each node in the graph contains a label and a list of its neighbors. (a connected component (or just component) of an undirected graph is a subgraph in which any two vertices are connected to each other by paths, and which is connected to no additional vertices in the supergraph.)
+
+
+"""
+Definition for a undirected graph node
+class UndirectedGraphNode:
+    def __init__(self, x):
+        self.label = x
+        self.neighbors = []
+"""
+
+import Queue
+class Solution:
+    """
+    @param: nodes: a array of Undirected graph node
+    @return: a connected set of a Undirected graph
+    """
+    def connectedSet(self, nodes):
+        # write your code here
+        self.visited = {node: 0 for node in nodes}
+        res = []
+        
+        for node in nodes:
+            if self.visited[node] == 0:
+                subgraph = []
+                self.bfs(subgraph, node)
+                res.append(sorted(subgraph))
+        
+        return res
+        
+    
+    def bfs(self, subgraph, node):
+        q = Queue.Queue()
+        q.put(node)
+        subgraph.append(node.label)
+        self.visited[node] = 1
+        
+        while not q.empty():
+            cur = q.get()
+            for n in cur.neighbors:
+                if self.visited[n] == 0:
+                    q.put(n)
+                    subgraph.append(n.label)
+                    self.visited[n] = 1
+            
+            
