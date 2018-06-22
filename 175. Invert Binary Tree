@@ -1,0 +1,32 @@
+175. Invert Binary Tree
+
+Invert a binary tree.
+
+Example
+  1         1
+ / \       / \
+2   3  => 3   2
+   /       \
+  4         4
+Challenge
+Do it in recursion is acceptable, can you do it without recursion?
+
+class Solution:
+    """
+    @param root: a TreeNode, the root of the binary tree
+    @return: nothing
+    """
+    def invertBinaryTree(self, root):
+        # write your code here
+        self.dfs(root)
+        return root
+    
+    def dfs(self, node):
+        left = node.left
+        right = node.right
+        node.left = right
+        node.right = left
+        if node.left:
+            self.dfs(node.left)
+        if node.right:
+            self.dfs(node.right)
