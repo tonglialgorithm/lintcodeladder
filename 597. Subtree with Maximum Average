@@ -1,0 +1,38 @@
+597. Subtree with Maximum Average
+Given a binary tree, find the subtree with maximum average. Return the root of the subtree.
+
+Example
+Given a binary tree:
+
+     1
+   /   \
+ -5     11
+ / \   /  \
+1   2 4    -2 
+return the node 11.
+
+class Solution:
+    """
+    @param root: the root of binary tree
+    @return: the root of the maximum average of subtree
+    """
+    def findSubtree2(self, root):
+        # write your code here
+        self.avg = -sys.maxint - 1
+        self.subtree = None
+        self.helper(root)
+        return self.subtree
+    
+    def helper(self, root):
+        if not root:
+            return (0, 0)
+        
+        leftSum, leftSize = self.helper(root.left)
+        rightSum, rightSize = self.helper(root.right)
+        curAvg = (leftSum + rightSum + root.val)*1.0 / (leftSize + rightSize + 1)
+        
+        if curAvg > self.avg:
+            self.avg = curAvg
+            self.subtree = root
+        
+        return (leftSum + rightSum + root.val, leftSize + rightSize + 1)   
