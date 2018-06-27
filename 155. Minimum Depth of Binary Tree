@@ -1,0 +1,62 @@
+155. Minimum Depth of Binary Tree
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+Example
+Given a binary tree as follow:
+
+  1
+ / \ 
+2   3
+   / \
+  4   5  
+The minimum depth is 2.
+
+
+bfs:
+注意：没有叶子不算，比如如果root.left不存在，并不能说最小深度是1，而是要从右子树中找到有叶子的最小深度。
+所以主函数中要分情况讨论
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param root: The root of binary tree
+    @return: An integer
+    """
+    def minDepth(self, root):
+        # write your code here
+        if not root:
+            return 0
+        
+        if not root.left and root.right:
+            return self.bfs(root.right, 1)
+        if not root.right and root.left:
+            return self.bfs(root.left, 1)
+        if root.right and root.left:
+            return self.bfs(root, 0)
+        else:
+            return 1
+    
+    def bfs(self, node, count):
+        import Queue
+        q = Queue.Queue()
+        q.put(node)
+        
+        while not q.empty():
+            size = q.qsize()
+            for i in range(size):
+                node = q.get()
+                if not node.left and not node.right:
+                    return count + 1
+                if node.left:
+                    q.put(node.left)
+                if node.right:
+                    q.put(node.right)
+            count += 1
