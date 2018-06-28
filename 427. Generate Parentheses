@@ -1,0 +1,31 @@
+427. Generate Parentheses
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+Example
+Given n = 3, a solution set is:
+
+"((()))", "(()())", "(())()", "()(())", "()()()"
+
+
+
+class Solution:
+    """
+    @param n: n pairs
+    @return: All combinations of well-formed parentheses
+    """
+    def generateParenthesis(self, n):
+        # write your code here
+        res = []
+        self.dfs(res, '', n, n)
+        return res
+    
+    def dfs(self, res, par, left, right):
+        if left == 0 and right == 0:
+            res.append(par)
+            return
+        
+        if left > 0:
+            self.dfs(res, par + '(', left - 1, right)
+        
+        if right > 0 and right > left:
+            self.dfs(res, par + ')', left, right - 1)
