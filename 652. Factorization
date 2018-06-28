@@ -1,0 +1,43 @@
+652. Factorization
+A non-negative numbers can be regarded as product of its factors.
+Write a function that takes an integer n and return all possible combinations of its factors.
+
+Example
+Given n = 8
+return [[2,2,2],[2,4]]
+// 8 = 2 x 2 x 2 = 2 x 4.
+
+Given n = 1
+return []
+
+Given n = 12
+return [[2,6],[2,2,3],[3,4]]
+
+
+class Solution:
+    """
+    @param n: An integer
+    @return: a list of combination
+    """
+    def getFactors(self, n):
+        # write your code here
+        res = []
+        self.dfs(n, [], res, 2)
+        return res
+    
+    def dfs(self, n, subset, res, startNum):
+        if n <= 1:
+            if len(subset) > 1:
+                res.append(subset[:])
+            return
+        
+        for i in range(startNum, int(n**0.5 + 1)):
+            if n % i == 0:
+                subset.append(i)
+                self.dfs(n / i, subset, res, i)
+                subset.pop()
+            
+        if n >= startNum:
+            subset.append(n)
+            self.dfs(1, subset, res, n)
+            subset.pop()
