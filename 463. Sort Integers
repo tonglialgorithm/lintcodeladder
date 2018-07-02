@@ -1,0 +1,78 @@
+463. Sort Integers
+Given an integer array, sort it in ascending order. Use selection sort, bubble sort, insertion sort or 
+any O(n2) algorithm.
+
+Example
+Given [3, 2, 1, 4, 5], return [1, 2, 3, 4, 5].
+
+
+选择排序（wiki）：
+
+最坏时间复杂度 О(n²)
+最优时间复杂度 О(n²)
+平均时间复杂度 О(n²)
+空间复杂度   О(n) total, O(1) auxiliary
+
+
+选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，
+存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，
+直到所有元素均排序完毕。
+
+选择排序的主要优点与数据移动有关。如果某个元素位于正确的最终位置上，则它不会被移动。选择排序每次交换一对元素，
+它们当中至少有一个将被移到其最终位置上，因此对 n个元素的表进行排序总共进行至多 n-1 次交换。在所有的完全依靠交换
+去移动元素的排序方法中，选择排序属于非常好的一种。
+
+def sortIntegers(self, A):
+    # write your code here
+    for i in range(len(A)):
+        minInd = i
+        for j in range(i+1, len(A)):
+            if A[j] < A[minInd]:
+                minInd = j
+            
+        A[i], A[minInd] = A[minInd], A[i]
+            
+    return
+
+
+-----------------------------------------------------------------------------------------
+
+插入排序（英语：Insertion Sort）：
+一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+插入排序在实现上，通常采用in-place排序（即只需用到 O(1)的额外空间的排序），因而在从后向前扫描过程中，需要反复把已排序
+元素逐步向后挪位，为最新元素提供插入空间。
+
+
+*程序有一点难理解
+def sortIntegers(self, A):
+    # write your code here
+    for i in range(len(A)):
+        newVal = A[i]
+        j = i - 1
+        
+        while j >= 0 and A[j] > newVal:
+            A[j + 1] = A[j]
+            j -= 1
+        
+        A[j + 1] = newVal
+
+-----------------------------------------------------------------------------------------
+
+冒泡排序：
+冒泡排序（英语：Bubble Sort）是一種簡單的排序算法。它重複地走訪過要排序的數列，一次比較兩個元素，如果他們的順序錯誤就把
+他們交換過來。走訪數列的工作是重複地進行直到沒有再需要交換，也就是說該數列已經排序完成。這個算法的名字由來是因為越小的元素
+會經由交換慢慢「浮」到數列的頂端。
+
+冒泡排序對n個項目需要O(n^2)的比較次數，且可以原地排序。儘管這個演算法是最簡單瞭解和實作的排序算法之一，但它對於包含大量
+的元素的數列排序是很沒有效率的。
+
+def sortIntegers(self, A):
+    # write your code here
+    while True:
+        exchange = False
+        for i in range(len(A) - 1):
+            if A[i] > A[i + 1]:
+                A[i], A[i + 1] = A[i + 1], A[i]
+                exchange = True
+        if exchange == False:
+            break
