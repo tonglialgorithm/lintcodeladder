@@ -1,0 +1,32 @@
+191. Maximum Product Subarray
+Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+Example
+For example, given the array [2,3,-2,4], the contiguous subarray [2,3] has the largest product = 6.
+
+难点在于有负数的情况
+f数组：记录每次最大product
+g数组：记录每次最小的product（因为如果有负数，则下一步的最大值是该负数乘以之前的最小值）
+
+注意自身也有可能是当前最大乘积
+
+class Solution:
+    """
+    @param nums: An array of integers
+    @return: An integer
+    """
+    def maxProduct(self, nums):
+        # write your code here
+        f, g = [], []
+        f.append(nums[0])
+        g.append(nums[0])
+        
+        for i in range(1, len(nums)):
+            f.append(max(nums[i], f[i - 1] * nums[i], g[i - 1] * nums[i]))
+            g.append(min(nums[i], f[i - 1] * nums[i], g[i - 1] * nums[i]))
+        
+        m = f[0]
+        for i in range(1, len(f)):
+            m = max(m, f[i])
+        
+        return m
