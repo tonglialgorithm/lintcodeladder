@@ -1,0 +1,45 @@
+843. Digital Flip
+Give you an array of 01. Find the minimum number of flipping steps so that the array meets the following rules:
+The back of 1 can be either1 or 0, but0 must be followed by 0.
+
+Example
+Given array = [1,0,0,1,1,1], return 2.
+
+Explanation:
+Turn two 0s into 1s.
+Given array = [1,0,1,0,1,0], return 2.
+
+Explanation:
+Turn the second 1 and the third 1 into 0.
+
+
+class Solution:
+    """
+    @param nums: the array
+    @return: the minimum times to flip digit
+    """
+    def flipDigit(self, nums):
+        # Write your code here
+        n = len(nums)
+        if n <= 1:
+            return 0
+        
+        f = [[0 for i in range(2)] for j in range(n + 1)]
+        f[0][0] = f[0][1] = 0
+        
+        for i in range(1, n + 1):
+            # change nums[i - 1] to j 
+            for j in range(2):
+                f[i][j] = sys.maxint
+                # change nums[i - 2] to k
+                for k in range(2):
+                    # check whether k,j is 0,1
+                    if k == 0 and j == 1:
+                        continue
+                    t = f[i - 1][k]
+                    if j != nums[i - 1]: # means we need to flip the jth
+                        t += 1 # flip, therefore add one move
+                    f[i][j] = min(f[i][j], t)
+        
+        return min(f[n][0], f[n][1])
+                        
