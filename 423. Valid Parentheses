@@ -1,0 +1,41 @@
+423. Valid Parentheses
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+Example
+The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+class Solution:
+    """
+    @param s: A string
+    @return: whether the string is a valid parentheses
+    """
+    def isValidParentheses(self, s):
+        # write your code here
+        if not s:
+            return True
+        
+        if len (s) < 2:
+            return False
+        
+        stack = []
+        
+        for i in range(len(s)):
+            if s[i] == '(' or s[i] == "[" or s[i] == '{':
+                stack.append(s[i])
+            if s[i] == ')':
+                if stack == [] or stack[-1] != '(':
+                    return False
+                stack.pop()
+                continue
+            if s[i] == ']':
+                if stack == [] or stack[-1] != '[':
+                    return False
+                stack.pop()
+                continue
+            if s[i] == '}':
+                if stack == [] or stack[-1] != '{':
+                    return False
+                stack.pop()
+                continue
+        
+        return stack == []
