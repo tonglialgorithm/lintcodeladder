@@ -1,0 +1,48 @@
+628. Maximum Subtree
+Given a binary tree, find the subtree with maximum sum. Return the root of the subtree.
+
+Example
+Given a binary tree:
+
+     1
+   /   \
+ -5     2
+ / \   /  \
+0   3 -4  -5 
+return the node with value 3.
+
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+class Solution:
+    """
+    @param root: the root of binary tree
+    @return: the maximum weight node
+    """
+    def findSubtree(self, root):
+        # write your code here
+        if not root:
+            return root
+        self.maxTree = -sys.maxint - 1
+        self.node = None
+        self.maxSubTree(root)
+        return self.node
+    
+    def maxSubTree(self, root):
+        if not root:
+            return 0
+        
+        leftVal = self.maxSubTree(root.left)
+        rightVal = self.maxSubTree(root.right)
+        
+        sumTree = leftVal + rightVal + root.val
+        
+        if self.maxTree < sumTree:
+            self.maxTree = sumTree
+            self.node = root
+        
+        return sumTree
