@@ -1,0 +1,75 @@
+1227. Repeated Substring Pattern
+Given a non-empty string check if it can be constructed by taking a substring of it and appending 
+multiple copies of the substring together. You may assume the given string consists of lowercase 
+English letters only and its length will not exceed 10000.
+
+Example 1:
+
+Input: "abab"
+
+Output: True
+
+Explanation: It's the substring "ab" twice.
+Example 2:
+
+Input: "aba"
+
+Output: False
+Example 3:
+
+Input: "abcabcabcabc"
+
+Output: True
+
+Explanation: It's the substring "abc" four times. (And the substring "abcabc" twice.)
+
+
+检测是否由子字符串重复组成，只需要看是不是可以后面部分的字符串与前面的字符串完全一样就可以了。
+
+首先如果字符串的字母数小于两个，那也不用判断了，一定不可能是多个子字符串重复出来的。
+
+设立两个标记，一个快一点一个慢一点。快的从第二个字母开始往后遍历，找到与第一个字母一样的，就停下来开始判断，
+慢的从第一个字母开始，两个标记一起往后遍历，看是不是可以完全一致，一直到最后一个字母，如果从后面开始的与从
+头开始的一模一样，说明是存在重复的字符串，并且由它重复组成的。
+
+如果遍历时又出现不一样了，这时候说明还不是重复的，就要继续当做从头开始找了，继续往后遍历快的标记，找与第一
+个字母一样的，然后重复上面的过程，注意找到后慢的标记需要回到第一个字母。
+
+不管找没找到，当快的遍历到最后字母了就停止遍历了，这时如果是没找到的状态，那就直接false了，如果是找到的状
+态，那么有可能是确实重复组成的，也有可能只是最后一小节和前面的一样，中间的一段还是没有重复的，这时候根据慢
+的标记来判断，如果慢的标记已经走过了整个字符串的一半，就说明至少是二分之一的子字符串重复两次得到的，或者更
+小的字符串重复多次。如果慢的标记还没走过一半，说明中间还有一部分并没有来得及重复，这时候就依然是false了。在
+判断慢的是否过半了时，由于存在整个字符串长度可能为基数也可能为偶数的情况，所以用慢标记的位置乘以二来和整体
+长度作比较进行判断比较合适。
+
+
+
+class Solution:
+    """
+    @param s: a string
+    @return: return a boolean
+    """
+    def repeatedSubstringPattern(self, s):
+        # write your code here
+        if not s or len(s) < 2:
+            return False
+        
+        slow, fast = 0, 1
+        match = False
+        while fast < len(s):
+            if s[fast] == s[0]:
+                while fast < len(s):
+                    if s[fast] == s[slow]:
+                        match = True
+                        fast += 1
+                        slow += 1
+                    else:
+                        match = False
+                        slow = 0
+                        fast += 1
+                        break
+            else:
+                match = False
+                fast += 1
+        
+        return match and slow*2 >= len(s)
