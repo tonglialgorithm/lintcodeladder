@@ -17,7 +17,7 @@ Return the root of new tree
 
 
 按照右根左的顺序逐一相加
-实质是后序遍历
+
 """
 Definition of TreeNode:
 class TreeNode:
