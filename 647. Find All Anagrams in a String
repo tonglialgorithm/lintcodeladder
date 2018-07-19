@@ -1,0 +1,57 @@
+647. Find All Anagrams in a String
+Given a string s and a non-empty string p, find all the start indices of p's anagrams in s.
+
+Strings consists of lowercase English letters only and the length of both strings s and p 
+will not be larger than 40,000.
+
+The order of output does not matter.
+
+Example
+Given s = "cbaebabacd" p = "abc"
+
+return [0, 6]
+
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+
+用sliding window和hashtable
+
+count的意思是还有多少个字母需要消除，当0个需要消除时，说明和p一样了
+class Solution:
+    """
+    @param s: a string
+    @param p: a string
+    @return: a list of index
+    """
+    def findAnagrams(self, s, p):
+        # write your code here
+        res = []
+        if not s or not p or len(s) == 0 or len(p) == 0 or len(s) < len(p):
+            return res
+    
+        strDict = {}
+        for le in p:
+            strDict[le] = strDict.get(le, 0) + 1
+        
+        count = len(p)
+        left, right = 0, 0
+        while right < len(s):
+            if s[right] in strDict:
+                strDict[s[right]] -= 1
+                if strDict[s[right]] >= 0:
+                    count -= 1
+            if count == 0:
+                res.append(left)
+            
+            if right == left + len(p) - 1:
+                if s[left] in strDict:
+                    if strDict[s[left]] >= 0:
+                        count += 1
+                    strDict[s[left]] += 1
+                left += 1
+                
+            right += 1
+        
+        return res
+            
+            
