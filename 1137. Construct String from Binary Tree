@@ -1,0 +1,71 @@
+1137. Construct String from Binary Tree
+You need to construct a string consists of parenthesis and integers from a binary tree 
+with the preorder traversing way.
+
+The null node needs to be represented by empty parenthesis pair "()". And you need to 
+omit all the empty parenthesis pairs that don't affect the one-to-one mapping relationship 
+between the string and the original binary tree.
+
+Example 1:
+
+Input: Binary tree: [1,2,3,4]
+       1
+     /   \
+    2     3
+   /    
+  4     
+
+Output: "1(2(4))(3)"
+
+Explanation: Originallay it needs to be "1(2(4)())(3()())", 
+but you need to omit all the unnecessary empty parenthesis pairs. 
+And it will be "1(2(4))(3)".
+Example 2:
+
+Input: Binary tree: [1,2,3,null,4]
+       1
+     /   \
+    2     3
+     \  
+      4 
+
+Output: "1(2()(4))(3)"
+
+Explanation: Almost the same as the first example, 
+except we can't omit the first parenthesis pair to break the one-to-one mapping 
+relationship between the input and the output.
+
+
+直接构造，向左右递归，注意右子树为空的时候需要特殊处理
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+
+class Solution:
+    """
+    @param t: the root of tree
+    @return: return a string
+    """
+    def tree2str(self, t):
+        # write your code here
+        res = self.traverse(t)
+        return res[1:len(res)-1]
+        
+    def traverse(self, t):
+        if t is None:
+            return '()'
+        
+        if t.left is None and t.right is None:
+            return '(' + str(t.val) + ')'
+        
+        left = self.traverse(t.left)
+        right = self.traverse(t.right)
+        
+        if right == '()':
+            right = ''
+            
+        return '(' + str(t.val) + left + right + ')'
