@@ -1,0 +1,38 @@
+414. Divide Two Integers
+Divide two integers without using multiplication, division and mod operator.
+
+If it is overflow, return 2147483647
+
+Example
+Given dividend = 100 and divisor = 9, return 11.
+
+负数越界的处理，参考了leetcode答案，设立neg
+
+class Solution:
+    """
+    @param dividend: the dividend
+    @param divisor: the divisor
+    @return: the result
+    """
+    def divide(self, dividend, divisor):
+        # write your code here
+        neg = ((dividend < 0) != (divisor < 0))
+        
+        if dividend == 0:
+            return 0
+        dividend = abs(dividend)
+        divisor  = abs(divisor)
+        ans = 0
+        while dividend >= divisor:
+            count = 1
+            initialnum = divisor
+            while initialnum * 2 < dividend:
+                initialnum *= 2
+                count *= 2
+            dividend = dividend - initialnum
+            ans = ans + count
+        
+        if neg:
+            return max(-ans, -2147483648)
+        else:
+            return min(ans, 2147483647)
